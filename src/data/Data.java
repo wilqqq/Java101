@@ -28,9 +28,10 @@ public class Data {
             throw new Error("NOT A KNOWN TYPE");
         }
     }
-    public Data (Data copy) {
-        this(copy.name, copy.type);
-        this.data = copy.data;
+    public Data (Data source) {
+        this(source.name, source.type);
+        Data obj = source.copy(0, source.size());
+        this.data = obj.data;// possibly wrong / fixed
     }
     public int size() { return data.size();}
     public void set(Object element, int index) {
