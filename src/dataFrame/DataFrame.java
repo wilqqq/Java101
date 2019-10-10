@@ -94,9 +94,21 @@ public class DataFrame {
         // } else {
         // }
         //TODO - fit to the size (use Arraylist)
-        // if(it != cols.length){
-            
-        // }
+        if(it != cols.length){
+            Data [] columnsO = new Data[it];
+            String [] typesO = new String[it];
+            String [] namesO = new String[it];
+
+            for(int i=0;i<it;i++){
+                columnsO[i] = columns[i];
+                typesO[i] = types[i];
+                namesO[i] = names[i];
+            }
+
+            columns = columnsO;
+            types = typesO;
+            names = namesO;
+        }
         return new DataFrame(names, types, columns);
     }
     public DataFrame get(String [] cols, boolean copy){
@@ -119,11 +131,15 @@ public class DataFrame {
         return tmp;
     }
 
-    public DataFrame iloc(int index){
-        if(index >= data[0].size())
+    public DataFrame iloc(int from, int to){
+        if(to >= data[0].size() || (from >= to && to > 0))
             return null;
         String [] cn = getColumnNames();
-        return get(cn, true, index, index+1);
+        return get(cn, true, from, to);
+    }
+
+    public DataFrame iloc(int index){
+        return iloc(index, index+1);
     }
 
     public int size(){return this.data.length;}

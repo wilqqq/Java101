@@ -13,5 +13,7 @@ public class App {
         System.out.println(df.get("kol1"));
         df.get("kfkfk");
         df.iloc(0).print();
+        df.iloc(1,2).print();
+        df.get(new String[]{"kol1", "kol2"}, false).print();
     }
 }
