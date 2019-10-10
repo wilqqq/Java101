@@ -8,35 +8,17 @@ import java.util.function.Function;
 public class Data {
     private String type;
     private ArrayList<Object> data;
-    private String name;
-    public Data (String name,String dataType){
-        this.name = name;
+    public Data (String dataType){
         this.type = dataType.toLowerCase();
         data = new ArrayList<Object>();
-        // switch ( this.type ) {
-        //     //cant use primitive in generic type, must use wrapper class
-        //     //use instanceof to check if it's a int 
-        //     case "int":
-        //     data = new ArrayList<Integer>();
-        //     break;
-        //     case "double":
-        //     data = new ArrayList<Double>();
-        //     break;
-        //     case "string":
-        //     data = new ArrayList<String>();
-        //     break;
-        //     default:
-        //     throw new Error("NOT A KNOWN TYPE");
-        // }
     }
-    public Data (String name,String dataType, Object [] elements){
-        this.name = name;
+    public Data (String dataType, Object [] elements){
         this.type = dataType.toLowerCase();
         data = new ArrayList<Object>();
         set(elements);
     }
     public Data (Data source) {
-        this(source.name, source.type);
+        this(source.type);
         Data obj = source.copy(0, source.size());
         this.data = obj.data;// possibly wrong / fixed
     }
@@ -88,11 +70,22 @@ public class Data {
         return data.get(index);
     }
     public Data copy(int from, int to){
+        if(to < 0)
+            to = data.size() + 1 +to;
         if(from >= data.size() || from > to)
             throw new IndexOutOfBoundsException();
-        Data ret = new Data(this.name, this.type);
-        for(; from<to; from++)
+        Data ret = new Data(this.type);
+        for(; from<to; from++){
+            //System.out.println(from);
             ret.set(data.get(from),from); //using add
+        }
+        return ret;
+    }
+    public String toString(){
+        String ret = type.toString() + ": [ ";
+        for(Object o: data)
+            ret += o.toString() + " ";
+        ret += "]";
         return ret;
     }
 }
