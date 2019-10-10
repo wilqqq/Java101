@@ -12,26 +12,36 @@ public class Data {
     public Data (String name,String dataType){
         this.name = name;
         this.type = dataType.toLowerCase();
-        switch ( this.type ) {
-            //cant use primitive in generic type, must use wrapper class
-            //use instanceof to check if it's a int 
-            case "int":
-            data = new ArrayList<Integer>();
-            break;
-            case "double":
-            data = new ArrayList<Double>();
-            break;
-            case "string":
-            data = new ArrayList<String>();
-            break;
-            default:
-            throw new Error("NOT A KNOWN TYPE");
-        }
+        data = new ArrayList<Object>();
+        // switch ( this.type ) {
+        //     //cant use primitive in generic type, must use wrapper class
+        //     //use instanceof to check if it's a int 
+        //     case "int":
+        //     data = new ArrayList<Integer>();
+        //     break;
+        //     case "double":
+        //     data = new ArrayList<Double>();
+        //     break;
+        //     case "string":
+        //     data = new ArrayList<String>();
+        //     break;
+        //     default:
+        //     throw new Error("NOT A KNOWN TYPE");
+        // }
+    }
+    public Data (String name,String dataType, Object [] elements){
+        this.name = name;
+        this.type = dataType.toLowerCase();
+        data = new ArrayList<Object>();
+        set(elements);
     }
     public Data (Data source) {
         this(source.name, source.type);
         Data obj = source.copy(0, source.size());
         this.data = obj.data;// possibly wrong / fixed
+    }
+    public String getType() {
+        return this.type;
     }
     public int size() { return data.size();}
     public void set(Object element, int index) {
@@ -39,23 +49,37 @@ public class Data {
             //cant use primitive in generic type, must use wrapper class
             //use instanceof to check if it's a int 
             case "int":
-            if(index >= data.size())
-                data.add((Integer)element);
-            else
-                data.set(index, (Integer)element);
-            break;
+                if(!(element instanceof Integer))
+                    throw new Error("WRONG TYPE");
+                if(index >= data.size())
+                    data.add(element);
+                else
+                    data.set(index, element);
+                break;
             case "double":
-            if(index >= data.size())
-                data.add((Double)element);
-            else
-                data.set(index, (Double)element);
+                if(!(element instanceof Double))
+                    throw new Error("WRONG TYPE");
+                if(index >= data.size())
+                    data.add(element);
+                else
+                    data.set(index, element);
             break;
             case "string":
-            if(index >= data.size())
-                data.add((String)element);
-            else
-                data.set(index, (String)element);
+                if(!(element instanceof String))
+                    throw new Error("WRONG TYPE");
+                if(index >= data.size())
+                    data.add(element);
+                else
+                    data.set(index, element);
             break;
+        }
+    }
+    public void set(Object [] elements) {
+        try {
+            for(Object e: elements)
+                set(e, this.data.size());
+        } catch (Exception e) {
+            throw new Error("WRONG TYPE AT: "+e.toString());
         }
     }
     public Object get(int index){
