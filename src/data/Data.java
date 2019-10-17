@@ -2,8 +2,6 @@ package data;
 
 //array list -> faster, like vector but not synchronised 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
 
 public class Data {
     private String type;
@@ -27,6 +25,7 @@ public class Data {
     }
     public int size() { return data.size();}
     public void set(Object element, int index) {
+        // System.out.println(type);
         switch ( type ) {
             //cant use primitive in generic type, must use wrapper class
             //use instanceof to check if it's a int 

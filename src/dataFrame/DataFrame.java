@@ -2,17 +2,17 @@ package dataFrame;
 
 import data.*;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 
 /**
- * DataFrame
+ * DataFrame - a class for holding vectors of values with different data types in a tabular form
  */
 public class DataFrame {
     private Data [] data;
-    private Map<String, Integer> columnNames;
+    protected Map<String, Integer> columnNames;
+
+    protected DataFrame(){}
 
     public DataFrame( String [] columnNames, String [] dataTypes){
         this.data = new Data[columnNames.length];
@@ -45,23 +45,36 @@ public class DataFrame {
         }
     }
 
-    public void print() {
-        System.out.println(columnNames.keySet());
-        String tmp = "| ";
+    public String toString() {
+        String tmp = "";
+        String all;
+        int len = 8;
+        for(String s: columnNames.keySet()){
+            tmp += s + "\t";
+            //len += s.length()/8;
+        }
+        all = tmp + "\n";
+        len += tmp.length();
+        tmp = "";
         for(int j=0; j<data.length; j++)
-            tmp += data[j].getType() + "|\t";
-        System.out.println(tmp);
-        int len = tmp.length();
+            tmp += data[j].getType() + "\t";
+        // if(tmp.length()>len)
+        //     len = tmp.length();
+        all += tmp +"\n";
         for(int i=0; i<data[0].size(); i++){
             tmp = "";
             for(int j=0; j<len; j++)
                 tmp += "-";
-            System.out.println(tmp);
-            tmp = "|";
+            tmp += "\n";
             for(int j=0; j<data.length; j++)
-                tmp += data[j].get(i).toString() + "|\t";
-            System.out.println(tmp);
+                tmp += data[j].get(i).toString() + "\t";
+            all += tmp + "\n";
         }
+        return all;
+    }
+
+    public void print(){
+        System.out.println(toString());
     }
 
     public Data get(String columnName, int from, int to){
@@ -74,6 +87,13 @@ public class DataFrame {
 
     public Data get(String columnName){
         return get(columnName, 0, -1);
+    }
+
+    public Data get(int index){
+        if(index < data.length)
+            return data[index].copy(0, -1);
+        else
+            return null;
     }
 
     public DataFrame get(String [] cols, boolean copy, int from, int to){
@@ -93,7 +113,6 @@ public class DataFrame {
             }
         // } else {
         // }
-        //TODO - fit to the size (use Arraylist)
         if(it != cols.length){
             Data [] columnsO = new Data[it];
             String [] typesO = new String[it];
@@ -142,5 +161,12 @@ public class DataFrame {
         return iloc(index, index+1);
     }
 
-    public int size(){return this.data.length;}
+    public int size( boolean column ){ 
+        if (!column)
+            return this.data.length;
+        else
+            return this.data[0].size();
+    }
+
+    public int size(){ return size(false);}
 }
