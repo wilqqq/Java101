@@ -57,6 +57,6 @@ public class App {
         System.out.println(sdf);
 
         System.out.println("\n\n--- densed sdf ---");
-        sdf.toDense().print();
+        sdf.toDense(1,4,new String[]{"kl 1","kl 3"}).print();
     }
 }

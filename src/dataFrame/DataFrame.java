@@ -24,7 +24,8 @@ public class DataFrame {
     }
     public DataFrame( String [] columnNames, String [] dataTypes, Data [] elements){
         this(columnNames, dataTypes);
-        add(elements);
+        if(elements != null)
+            add(elements);
     }
 
     public void add(Data [] elements){
@@ -32,11 +33,12 @@ public class DataFrame {
             throw new Error("Wrong dimensions");
         try {
             //TODO - maping and smart data input
-            // for(Data d: elements)
+            //for(Data d: elements){
             for(int i=0; i<data.length; i++){
+                //Integer i = this.columnNames.get(arg0)
                 //System.out.println(elements[i].getType().equals(data[i].getType()));
                 if( elements[i].getType().equals(data[i].getType()))
-                    data[i] = elements[i].copy(0, -1); //TODO fixed sizes
+                    data[i] = elements[i].copy(0, -1);
                 else
                     throw new Error("Wrong column names");
             }

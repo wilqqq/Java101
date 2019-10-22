@@ -62,19 +62,26 @@ public class SparseDataFrame extends DataFrame{
             tmp[i++] = s;
         return tmp;
     }
-    public DataFrame toDense(){
-        Object [] tmp = new Object[dataLength];
+    public DataFrame toDense(int from, int to, String [] colNames){
+        Object [] tmp = new Object[to-from];
         Data [] data = new Data[dataTypes.length];
-        for (int i=0; i<dataTypes.length; i++){
+        for (String s:colNames){
+            Integer i = this.columnNames.get(s);
+            if(i == null)
+                continue;
             int last = 0;
             for (int j=0; j<this.data[i].size(); j++){
                 COOValue cv = this.data[i].get(j);
-                // System.out.println(last+"|"+cv.getSpot());
-                for(;last<cv.getSpot();last++)
+                if(cv.getSpot()<from)
+                    continue;
+                if(cv.getSpot()>=to)
+                    break;
+                // System.out.println((last+from)+"|"+cv.getSpot());
+                for(;last+from<cv.getSpot();last++)
                     tmp[last] = hide;
                 tmp[last++] =(cv.getValue());
             }
-            for(;last<dataLength;last++)
+            for(;last<tmp.length;last++)
                 tmp[last] = hide;
             // System.out.println(dataTypes[i]);
             data[i] = new Data(dataTypes[i], tmp);
@@ -84,6 +91,9 @@ public class SparseDataFrame extends DataFrame{
         // System.out.println(data);
         return new DataFrame(this.getColumnNames(), dataTypes, data);
     }
+    public DataFrame toDense(){ return toDense(0,dataLength,getColumnNames());}
+    public DataFrame toDense(String [] colNames){ return toDense(0,dataLength,colNames);}
+    public DataFrame toDense(int from, int to){ return toDense(from,to,getColumnNames());}
     public void sparse(DataFrame df){
         sparse(df, 0);
     }
