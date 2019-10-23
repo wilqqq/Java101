@@ -64,12 +64,16 @@ public class SparseDataFrame extends DataFrame{
     }
     public DataFrame toDense(int from, int to, String [] colNames){
         Object [] tmp = new Object[to-from];
-        Data [] data = new Data[dataTypes.length];
+        ArrayList<Data> dataA = new ArrayList<Data>();
+        ArrayList<String> colsA = new ArrayList<String>();
         for (String s:colNames){
             Integer i = this.columnNames.get(s);
             if(i == null)
                 continue;
+            colsA.add(s);
             int last = 0;
+            /* different approach is to dense whole
+             data and use super method to cut wanted piece (iloc)*/
             for (int j=0; j<this.data[i].size(); j++){
                 COOValue cv = this.data[i].get(j);
                 if(cv.getSpot()<from)
@@ -84,12 +88,19 @@ public class SparseDataFrame extends DataFrame{
             for(;last<tmp.length;last++)
                 tmp[last] = hide;
             // System.out.println(dataTypes[i]);
-            data[i] = new Data(dataTypes[i], tmp);
+            dataA.add( new Data(dataTypes[i], tmp));
         }
-        // System.out.println(super.getColumnNames());
-        // System.out.println(dataTypes);
-        // System.out.println(data);
-        return new DataFrame(this.getColumnNames(), dataTypes, data);
+        /*there can be no dataframe without column names, but
+        there can be one with no data in it*/
+        if ( colsA.size() == 0)
+            return null;
+        String [] cols = new String[colsA.size()];
+        Data [] data = new Data[colsA.size()];
+        for(int i=0;i<colsA.size();i++){
+            cols[i] = colsA.get(i);
+            data[i] = dataA.get(i);
+        }
+        return new DataFrame(cols, dataTypes, data);
     }
     public DataFrame toDense(){ return toDense(0,dataLength,getColumnNames());}
     public DataFrame toDense(String [] colNames){ return toDense(0,dataLength,colNames);}
