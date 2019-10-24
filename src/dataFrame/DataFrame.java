@@ -2,6 +2,10 @@ package dataFrame;
 
 import data.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -26,6 +30,71 @@ public class DataFrame {
         this(columnNames, dataTypes);
         if(elements != null)
             add(elements);
+    }
+
+    public DataFrame(String fileName, String [] columnTypes, String [] columnNames){
+		try (FileReader fr = new FileReader(fileName)) {
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            if(columnNames == null){
+                line = br.readLine();
+                columnNames = line.split(",");
+                // System.out.println(columnNames);
+            }
+            // br.mark(0); //<- aint gonna work for a big file
+            // count elements + data integrity check (no missing values)
+            // int colSize = 0;
+			// while ((line = br.readLine())!= null) {
+            //     colSize++;
+            //     if ( line.split(",").length != columnNames.length)
+            //         throw new Error("missing data in line: " + colSize);
+            // }
+            // br.close();
+            // br = new BufferedReader(new FileReader(fileName));
+            data = new Data[columnTypes.length];
+            int i=0;
+            for(;i<data.length;i++)
+                data[i] = new Data(columnTypes[i].toLowerCase());
+            while((line = br.readLine())!= null) {
+                i=0;
+                for(String s: line.split(",")){
+                    Object el;
+                    switch(columnTypes[i].toLowerCase()){
+                        case "int":
+                            try{
+                                el = Integer.parseInt(s);
+                            }catch (NumberFormatException e){
+                                el = 0;
+                            }
+                        break;
+                        case "double":
+                            try{
+                                el = Double.parseDouble(s);
+                            }catch (NumberFormatException e){
+                                el = 0.0;
+                            }
+                        break;
+                        case "string":
+                            el = s;
+                        break;
+                        default:
+                        throw new Error("unknown data type: "+columnTypes[i].toLowerCase());
+                    }
+                    data[i++].add(el);
+                    // System.out.println(data[i-1]+"|"+el);
+                }
+                // System.out.println(line);
+                break;
+            }
+            this.columnNames = new TreeMap<String, Integer>();
+            for (i=0; i<columnNames.length; i++){
+                this.columnNames.put(columnNames[i], i);
+                this.data[i] = new Data(columnTypes[i]);
+            }
+            // automatic closed with try-with-resources
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     public void add(Data [] elements){

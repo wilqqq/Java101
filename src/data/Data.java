@@ -55,6 +55,7 @@ public class Data {
             break;
         }
     }
+    public void add(Object element){set(element,size());}
     public void set(Object [] elements) {
         try {
             for(Object e: elements)
