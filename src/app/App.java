@@ -66,6 +66,5 @@ public class App {
             new String[]{"double","double","double"},
             null
         );
-        df.print();
     }
 }
