@@ -5,7 +5,6 @@ import data.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -51,10 +50,13 @@ public class DataFrame {
             // }
             // br.close();
             // br = new BufferedReader(new FileReader(fileName));
-            data = new Data[columnTypes.length];
+            this.data = new Data[columnTypes.length];
+            this.columnNames = new TreeMap<String, Integer>();
             int i=0;
-            for(;i<data.length;i++)
-                data[i] = new Data(columnTypes[i].toLowerCase());
+            for(;i<data.length;i++){
+                this.data[i] = new Data(columnTypes[i].toLowerCase());
+                this.columnNames.put(columnNames[i], i);
+            }
             while((line = br.readLine())!= null) {
                 i=0;
                 for(String s: line.split(",")){
@@ -80,17 +82,16 @@ public class DataFrame {
                         default:
                         throw new Error("unknown data type: "+columnTypes[i].toLowerCase());
                     }
-                    data[i++].add(el);
-                    // System.out.println(data[i-1]+"|"+el);
+                    this.data[i++].add(el);
+                    //System.out.println(data[i-1]+"|"+el);
                 }
                 // System.out.println(line);
-                break;
+                // break;
             }
-            this.columnNames = new TreeMap<String, Integer>();
-            for (i=0; i<columnNames.length; i++){
-                this.columnNames.put(columnNames[i], i);
-                this.data[i] = new Data(columnTypes[i]);
-            }
+            // this.columnNames = new TreeMap<String, Integer>();
+            // for (i=0; i<columnNames.length; i++){
+            //     this.data[i] = new Data(columnTypes[i]);
+            // } 
             // automatic closed with try-with-resources
 		} catch (IOException e) {
 			e.printStackTrace();
