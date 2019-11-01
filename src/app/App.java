@@ -1,3 +1,4 @@
+
 package app;
 
 import dataFrame.DataFrame;
@@ -66,6 +67,6 @@ public class App {
             new String[]{"double","double","double"},
             null
         );
-        df.print();
+        df.iloc(5,15).print();
     }
 }

@@ -55,7 +55,26 @@ public class Data {
             break;
         }
     }
-    public void add(Object element){set(element,size());}
+    public void add(Object element) {
+        // System.out.println(type);
+        switch ( type ) {
+            //cant use primitive in generic type, must use wrapper class
+            //use instanceof to check if it's a int 
+            case "int":
+                if(!(element instanceof Integer))
+                    throw new Error("WRONG TYPE");
+                break;
+            case "double":
+                if(!(element instanceof Double))
+                    throw new Error("WRONG TYPE");
+            break;
+            case "string":
+                if(!(element instanceof String))
+                    throw new Error("WRONG TYPE");
+            break;
+        }
+        data.add(element);
+    }
     public void set(Object [] elements) {
         try {
             for(Object e: elements)
