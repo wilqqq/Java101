@@ -1,5 +1,8 @@
 package sparseDataFrame;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -14,7 +17,7 @@ public class SparseDataFrame extends DataFrame{
     private ArrayList<COOValue>[] data;
     private String [] dataTypes;
     private int dataLength;
-    private Object hide;
+    private Object [] hide;
     public SparseDataFrame(DataFrame df ){
         super();
         this.dataLength = 0;
@@ -29,13 +32,112 @@ public class SparseDataFrame extends DataFrame{
         }
         sparse(df);
     }
-    public void sparse(DataFrame df, Object hide){
-        this.hide = hide;
+    public SparseDataFrame(String fileName, String [] columnTypes, String [] columnNames){
+        this(fileName, columnTypes, columnNames, null);
+    }
+    public SparseDataFrame(String fileName, String [] columnTypes, String [] columnNames, Object [] hide){
+        try (FileReader fr = new FileReader(fileName)) {
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            if(columnNames == null){
+                line = br.readLine();
+                columnNames = line.split(",");
+                // System.out.println(columnNames);
+            }
+            this.data = new ArrayList[columnTypes.length];
+            this.dataTypes = new String[columnTypes.length];
+            this.columnNames = new TreeMap<String, Integer>();
+            int i=0;
+            for(;i<data.length;i++){
+                this.data[i] = new ArrayList<COOValue>();
+                this.dataTypes[i] = columnTypes[i].toLowerCase();
+                this.columnNames.put(columnNames[i], i);
+            }
+            this.hide = new Object[this.dataTypes.length];
+            if(hide == null){
+                for(i=0;i<this.dataTypes.length;i++){
+                    switch(dataTypes[i].toLowerCase()){
+                        case "int":
+                        this.hide[i] = 0;
+                        break;
+                        case "double":
+                        this.hide[i] = 0.0;
+                        break;
+                        case "string":
+                        this.hide[i] = "";
+                        break;
+                        default:
+                        throw new Error("unknown data type: "+this.dataTypes[i].toLowerCase());
+                    }
+                }
+            } else
+                this.hide = hide;
+            while((line = br.readLine())!= null) {
+                i=0;
+                for(String s: line.split(",")){
+                    Object el;
+                    switch(columnTypes[i].toLowerCase()){
+                        case "int":
+                            try{
+                                // hide[i] = Integer.parseInt(hide.toString());
+                                el = Integer.parseInt(s);
+                            }catch (NumberFormatException e){
+                                el = 0;
+                            }
+                        break;
+                        case "double":
+                            try{
+                                // hide = Double.parseDouble(hide.toString());
+                                el = Double.parseDouble(s);
+                            }catch (NumberFormatException e){
+                                el = 0.0;
+                            }
+                        break;
+                        case "string":
+                            el = s;
+                            // hide = hide.toString();
+                        break;
+                        default:
+                        throw new Error("unknown data type: "+columnTypes[i].toLowerCase());
+                    }
+                    if(!el.equals(this.hide[i]))
+                        this.data[i++].add(new COOValue(el,i));
+                    //System.out.println(data[i-1]+"|"+el);
+                }
+                // System.out.println(line);
+                // break;
+            }
+            // System.out.println(this);
+            // automatic closed with try-with-resources
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    public void sparse(DataFrame df, Object [] hide){
+        if(hide == null){
+            this.hide = new Object[this.dataTypes.length];
+            for(int i=0;i<this.dataTypes.length;i++){
+                switch(dataTypes[i].toLowerCase()){
+                    case "int":
+                    this.hide[i] = 0;
+                    break;
+                    case "double":
+                    this.hide[i] = 0.0;
+                    break;
+                    case "string":
+                    this.hide[i] = "";
+                    break;
+                    default:
+                    throw new Error("unknown data type: "+this.dataTypes[i].toLowerCase());
+                }
+            }
+        } else
+            this.hide = hide;
         this.dataLength += df.size(true);
         for (int i=0; i<df.size(true); i++){
             for (int j=0; j<df.size(); j++){
                 Object tmp = df.get(j).get(i);
-                if(!tmp.equals(hide))
+                if(!tmp.equals(hide[j]))
                     data[j].add(new COOValue(tmp, i));
                 // Data tmp = df.get(j);
                 // if(!tmp.equals(hide)){
@@ -54,6 +156,9 @@ public class SparseDataFrame extends DataFrame{
             }
         }
     }
+    public void sparse(DataFrame df){
+        sparse(df, null);
+    }
     @Override
     public String [] getColumnNames(){
         String [] tmp = new String[data.length];
@@ -70,10 +175,17 @@ public class SparseDataFrame extends DataFrame{
             Integer i = this.columnNames.get(s);
             if(i == null)
                 continue;
+            for(String ss: colsA){
+                if (ss.equals(s)){
+                    s +="x";
+                }
+            }
             colsA.add(s);
             int last = 0;
-            /* different approach is to dense whole
-             data and use super method to cut wanted piece (iloc)*/
+            /* different approach is to dense the whole
+             data and use super method to cut out the wanted piece with iloc,
+             but it ain't optimal*/
+            
             for (int j=0; j<this.data[i].size(); j++){
                 COOValue cv = this.data[i].get(j);
                 if(cv.getSpot()<from)
@@ -82,18 +194,22 @@ public class SparseDataFrame extends DataFrame{
                     break;
                 // System.out.println((last+from)+"|"+cv.getSpot());
                 for(;last+from<cv.getSpot();last++)
-                    tmp[last] = hide;
+                    tmp[last] = hide[i];
                 tmp[last++] =(cv.getValue());
             }
             for(;last<tmp.length;last++)
-                tmp[last] = hide;
+                tmp[last] = hide[i];
             // System.out.println(dataTypes[i]);
             dataA.add( new Data(dataTypes[i], tmp));
         }
         /*there can be no dataframe without column names, but
         there can be one with no data in it*/
-        if ( colsA.size() == 0)
-            return null;
+        if ( colsA.size() == 0){
+            String [] dtps = new String[colNames.length];
+            for(int i=0;i<dtps.length;i++)
+                dtps[i] = "int";
+            return new DataFrame(colNames,dtps);
+        }
         String [] cols = new String[colsA.size()];
         Data [] data = new Data[colsA.size()];
         for(int i=0;i<colsA.size();i++){
@@ -105,9 +221,6 @@ public class SparseDataFrame extends DataFrame{
     public DataFrame toDense(){ return toDense(0,dataLength,getColumnNames());}
     public DataFrame toDense(String [] colNames){ return toDense(0,dataLength,colNames);}
     public DataFrame toDense(int from, int to){ return toDense(from,to,getColumnNames());}
-    public void sparse(DataFrame df){
-        sparse(df, 0);
-    }
     public String toString(){
         String tmp = "SDF\n";
         Object [] cn = columnNames.keySet().toArray();

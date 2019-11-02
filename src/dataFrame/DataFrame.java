@@ -121,6 +121,7 @@ public class DataFrame {
         String tmp = "";
         String all;
         int len = 8;
+        //TODO wrong order (alphabetical)
         for(String s: columnNames.keySet()){
             tmp += s + "\t";
             //len += s.length()/8;

@@ -58,15 +58,23 @@ public class App {
         // System.out.println(sdf);
 
         // System.out.println("\n\n--- densed sdf ---");
-        // sdf.toDense(1,4,new String[]{"kl 1","kl 3"}).print();
+        // sdf.toDense(1,4,new String[]{"kl 2","kl 3","kl 2"}).print();
 
-        System.out.println("\n\n--- DataFrame from a file! ---");
-        // System.out.println((new File(".")).getCanonicalPath());
-        DataFrame df = new  DataFrame( 
-            "data/data.csv",
+        // System.out.println("\n\n--- DataFrame from a file! ---");
+        // DataFrame df2 = new  DataFrame( 
+        //     "data/data.csv",
+        //     new String[]{"double","double","double"},
+        //     null
+        // );
+        // df2.iloc(5,10).print();
+
+        System.out.println("\n\n--- SparseDataFrame from a file! ---");
+        SparseDataFrame sdf2 = new SparseDataFrame(
+            "data/sparse.csv",
             new String[]{"double","double","double"},
             null
         );
-        df.iloc(5,15).print();
+        DataFrame hlpr = sdf2.toDense(5,10,new String[]{"a","b","c"});
+        hlpr.print();
     }
 }
