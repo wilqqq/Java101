@@ -3,6 +3,8 @@ package app;
 
 import dataFrame.DataFrame;
 import sparseDataFrame.SparseDataFrame;
+import value.Value;
+import dValue.DValue;
 import data.Data;
 
 public class App {
@@ -68,13 +70,28 @@ public class App {
         // );
         // df2.iloc(5,10).print();
 
-        System.out.println("\n\n--- SparseDataFrame from a file! ---");
-        SparseDataFrame sdf2 = new SparseDataFrame(
-            "data/sparse.csv",
-            new String[]{"double","double","double"},
-            null
-        );
-        DataFrame hlpr = sdf2.toDense(5,10,new String[]{"last","x","y","a","b","c"});
-        hlpr.print();
+        // System.out.println("\n\n--- SparseDataFrame from a file! ---");
+        // SparseDataFrame sdf2 = new SparseDataFrame(
+        //     "data/sparse.csv",
+        //     new String[]{"double","double","double"},
+        //     null
+        // );
+        // DataFrame hlpr = sdf2.toDense(5,10,new String[]{"last","x","y","a","b","c"});
+        // hlpr.print();
+
+        System.out.println("\n\n--- Value class and its inheritances! ---");
+        DValue dv = DValue.builder().setValue("12.34").build();
+        Value dv0 = dv.create("0.0");
+        DValue dv2 = DValue.builder().setValue("12.34").build();
+        System.out.println(dv+"+"+dv2+"="+(dv.add(dv2)));
+        System.out.println(dv+"*"+dv2+"="+(dv.mul(dv2)));
+        System.out.println(dv+"-"+dv2+"="+(dv.sub(dv2)));
+        System.out.println(dv+"/"+dv2+"="+(dv.div(dv2)));
+        try {
+            dv.div(dv0);
+        } catch (Exception e) {
+            System.out.println(dv+"/"+dv0+"=Exception: "+e.getMessage());
+        }
+        
     }
 }
