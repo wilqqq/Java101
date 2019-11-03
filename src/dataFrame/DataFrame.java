@@ -120,14 +120,14 @@ public class DataFrame {
     public String toString() {
         String tmp = "";
         String all;
-        int len = 8;
+        // int len = 8;
         //TODO wrong order (alphabetical)
         for(String s: columnNames.keySet()){
             tmp += s + "\t";
             //len += s.length()/8;
         }
         all = tmp + "\n";
-        len += tmp.length();
+        // len += tmp.length();
         tmp = "";
         for(int j=0; j<data.length; j++)
             tmp += data[j].getType() + "\t";
@@ -136,9 +136,9 @@ public class DataFrame {
         all += tmp +"\n";
         for(int i=0; i<data[0].size(); i++){
             tmp = "";
-            for(int j=0; j<len; j++)
-                tmp += "-";
-            tmp += "\n";
+            // for(int j=0; j<len; j++)
+            //     tmp += "-";
+            // tmp += "\n";
             for(int j=0; j<data.length; j++)
                 tmp += data[j].get(i).toString() + "\t";
             all += tmp + "\n";

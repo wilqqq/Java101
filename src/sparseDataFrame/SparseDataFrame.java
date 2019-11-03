@@ -72,7 +72,8 @@ public class SparseDataFrame extends DataFrame{
                 }
             } else
                 this.hide = hide;
-            while((line = br.readLine())!= null) {
+            
+            for(int index=0;(line = br.readLine())!= null;index++) {
                 i=0;
                 for(String s: line.split(",")){
                     Object el;
@@ -101,7 +102,7 @@ public class SparseDataFrame extends DataFrame{
                         throw new Error("unknown data type: "+columnTypes[i].toLowerCase());
                     }
                     if(!el.equals(this.hide[i]))
-                        this.data[i++].add(new COOValue(el,i));
+                        this.data[i++].add(new COOValue(el,index));
                     //System.out.println(data[i-1]+"|"+el);
                 }
                 // System.out.println(line);

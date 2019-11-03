@@ -74,7 +74,7 @@ public class App {
             new String[]{"double","double","double"},
             null
         );
-        DataFrame hlpr = sdf2.toDense(5,10,new String[]{"a","b","c"});
+        DataFrame hlpr = sdf2.toDense(5,10,new String[]{"last","x","y","a","b","c"});
         hlpr.print();
     }
 }
