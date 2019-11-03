@@ -8,13 +8,15 @@ import value.*;
 public class DValue extends Value {
     private Double value;
 
-    public static class Builder{
-        private Double value=0.0;
-        public Builder setValue(double value){
+    public static class Builder {
+        private Double value = 0.0;
+
+        public Builder setValue(double value) {
             this.value = value;
             return this;
         }
-        public Builder setValue(String s){
+
+        public Builder setValue(String s) {
             try {
                 this.value = Double.parseDouble(s);
             } catch (Exception e) {
@@ -22,15 +24,17 @@ public class DValue extends Value {
             }
             return this;
         }
-        public DValue build(){
+
+        public DValue build() {
             return new DValue(this.value);
         }
     }
-    public static Builder builder(){
+
+    public static Builder builder() {
         return new DValue.Builder();
     }
 
-    private Double parse(Value obj){
+    private Double parse(Value obj) {
         double val;
         try {
             val = Double.parseDouble(obj.toString());
@@ -40,20 +44,21 @@ public class DValue extends Value {
         return val;
     }
 
-    private DValue(Value obj){
+    private DValue(Value obj) {
         this.value = parse(obj);
     }
-    private DValue(double value){
+
+    private DValue(double value) {
         this.value = value;
     }
 
-    @Override 
+    @Override
     public Value add(Value obj) {
         this.value += parse(obj);
         return this;
     }
 
-    public Value add(DValue obj){
+    public Value add(DValue obj) {
         this.value += obj.getValue();
         return this;
     }
@@ -65,19 +70,19 @@ public class DValue extends Value {
 
     @Override
     public Value div(Value obj) {
-        //TODO consider obj.eq("0");
+        // TODO consider obj.eq("0");
         // if(obj.eq("0"))
-        //     throw new IllegalArgumentException("Argument 'divisor' is 0");
+        // throw new IllegalArgumentException("Argument 'divisor' is 0");
         // this.value /= parse(obj);
         Double num = parse(obj);
-        if(num == 0.0)
+        if (num == 0.0)
             throw new IllegalArgumentException("Argument 'divisor' is 0");
         this.value /= num;
         return this;
     }
 
     public Value div(DValue obj) {
-        if(obj.getValue() == 0.0)
+        if (obj.getValue() == 0.0)
             throw new IllegalArgumentException("Argument 'divisor' is 0");
         this.value /= obj.getValue();
         return this;
@@ -90,9 +95,9 @@ public class DValue extends Value {
 
     @Override
     public boolean equals(Object other) {
-        try{
+        try {
             return this.value == Double.parseDouble(other.toString());
-        }catch(Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -146,6 +151,12 @@ public class DValue extends Value {
 
     public void setValue(Double value) {
         this.value = value;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        // return (DValue)super.clone();
+        return new DValue(this.value);
     }
 
     

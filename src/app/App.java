@@ -82,7 +82,7 @@ public class App {
         System.out.println("\n\n--- Value class and its inheritances! ---");
         DValue dv = DValue.builder().setValue("12.34").build();
         Value dv0 = dv.create("0.0");
-        DValue dv2 = DValue.builder().setValue("12.34").build();
+        DValue dv2 = (DValue)dv.clone();
         System.out.println(dv+"+"+dv2+"="+(dv.add(dv2)));
         System.out.println(dv+"*"+dv2+"="+(dv.mul(dv2)));
         System.out.println(dv+"-"+dv2+"="+(dv.sub(dv2)));
