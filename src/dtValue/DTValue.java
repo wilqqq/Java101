@@ -63,10 +63,12 @@ public class DTValue extends Value {
     public static Builder builder() {
         return new DTValue.Builder();
     }
-
     private String [] parse(Value obj) {
+        return parse(obj.toString());
+    }
+    private String [] parse(String obj) {
         String [] result = new String[]{"0000","00","00","00","00","00"};
-        String [] tmp=obj.toString().split("/");
+        String [] tmp=obj.split("/");
         if(tmp.length == 2){
             int i=0;
             String [] date = tmp[0].split("-");
@@ -88,6 +90,9 @@ public class DTValue extends Value {
 
     private DTValue(String v0,String v1,String v2,String v3,String v4,String v5) {
         this.value = new String[]{v0,v1,v2,v3,v4,v5};
+    }
+    private DTValue(String [] v) {
+        this(v[0],v[1],v[2],v[3],v[4],v[5]);
     }
 
     @Override
@@ -169,8 +174,7 @@ public class DTValue extends Value {
 
     @Override
     public Value create(String s) {
-        //TODO create
-        return this;//new Builder().setValue(s).build();
+        return new DTValue(parse(s));
     }
 
     @Override
@@ -190,8 +194,12 @@ public class DTValue extends Value {
 
     @Override
     public boolean gte(Value obj) {
-        //TODO gte
-        return false;//this.value.length() >= parse(obj).length();
+        String [] tmp = parse(obj);
+        for(int i=5;i>=0;i--){
+            if(Integer.parseInt(tmp[i])>Integer.parseInt(this.value[i]))
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -201,8 +209,12 @@ public class DTValue extends Value {
 
     @Override
     public boolean lte(Value obj) {
-        //TODO lte
-        return false;//this.value.length() <= parse(obj).length();
+        String [] tmp = parse(obj);
+        for(int i=5;i>=0;i--){
+            if(Integer.parseInt(tmp[i])<Integer.parseInt(this.value[i]))
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -241,8 +253,8 @@ public class DTValue extends Value {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        //TODO clone
-        return this;//new DTValue(this.value);
+        String [] nw = this.value.clone();
+        return new DTValue(nw);
     }
 
     
