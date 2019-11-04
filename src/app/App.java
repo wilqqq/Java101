@@ -2,6 +2,7 @@
 package app;
 
 import dataFrame.DataFrame;
+import sValue.SValue;
 import sparseDataFrame.SparseDataFrame;
 import value.Value;
 import dValue.DValue;
@@ -92,6 +93,8 @@ public class App {
         } catch (Exception e) {
             System.out.println(dv+"/"+dv0+"=Exception: "+e.getMessage());
         }
-        
+        SValue sv1 = SValue.builder().setValue("valuevalue").build();
+        Value sv2 = sv1.create("vvalu");
+        System.out.println(sv1+" rotfl with "+sv2+" = "+(sv1.mul(sv2))+"["+sv1.getValue().length()+"] then derotf: "+sv1.div(sv2)+"["+sv1.getValue().length()+"]");
     }
 }
