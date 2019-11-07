@@ -2,6 +2,7 @@
 package app;
 
 import dataFrame.DataFrame;
+import dtValue.DTValue;
 import sValue.SValue;
 import sparseDataFrame.SparseDataFrame;
 import value.Value;
@@ -96,5 +97,17 @@ public class App {
         SValue sv1 = SValue.builder().setValue("valuevalue").build();
         Value sv2 = sv1.create("vvalu");
         System.out.println(sv1+" rotfl with "+sv2+" = "+(sv1.mul(sv2))+"["+sv1.getValue().length()+"] then derotf: "+sv1.div(sv2)+"["+sv1.getValue().length()+"]");
+        DTValue dtv1 = DTValue.builder()
+        .setSeconds("00")
+        .setMinutes("44")
+        .setHour("12")
+        .setDay("03")
+        .setMonth("06")
+        .setYear("1996")
+        .build();
+        Value dtv2 = dtv1.create("1996/06/03-15:44:22");
+        System.out.println(dtv1+" >= "+dtv2+" = "+(dtv1.gte(dtv2)));
+        System.out.println(dtv1+" <= "+dtv2+" = "+(dtv1.lte(dtv2)));
+        System.out.println(dtv1+" + 0001/01/01-01:01:01  = "+(dtv1.add(dtv1.create("0001/01/01-01:01:01"))));
     }
 }

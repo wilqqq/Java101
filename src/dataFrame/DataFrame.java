@@ -1,12 +1,18 @@
 package dataFrame;
 
 import data.*;
+import dtValue.DTValue;
+import iValue.IValue;
+import sValue.SValue;
+import value.Value;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
+
+import dValue.DValue;
 
 /**
  * DataFrame - a class for holding vectors of values with different data types in a tabular form
@@ -60,24 +66,30 @@ public class DataFrame {
             while((line = br.readLine())!= null) {
                 i=0;
                 for(String s: line.split(",")){
-                    Object el;
+                    Value el;
                     switch(columnTypes[i].toLowerCase()){
                         case "int":
-                            try{
-                                el = Integer.parseInt(s);
-                            }catch (NumberFormatException e){
-                                el = 0;
-                            }
+                        el = IValue.builder().setValue(s).build();
+                            // try{
+                            //     el = Integer.parseInt(s);
+                            // }catch (NumberFormatException e){
+                            //     el = 0;
+                            // }
                         break;
                         case "double":
-                            try{
-                                el = Double.parseDouble(s);
-                            }catch (NumberFormatException e){
-                                el = 0.0;
-                            }
+                        el = DValue.builder().setValue(s).build();
+                            // try{
+                            //     el = Double.parseDouble(s);
+                            // }catch (NumberFormatException e){
+                            //     el = 0.0;
+                            // }
                         break;
                         case "string":
-                            el = s;
+                        el = SValue.builder().setValue(s).build();
+                            // el = s;
+                        break;
+                        case "date":
+                        el = DTValue.builder().setValue(s).build();
                         break;
                         default:
                         throw new Error("unknown data type: "+columnTypes[i].toLowerCase());

@@ -7,7 +7,12 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import dataFrame.*;
+import dtValue.DTValue;
+import iValue.IValue;
+import sValue.SValue;
+import value.Value;
 import cooValue.*;
+import dValue.DValue;
 import data.Data;
 
 /*
@@ -17,7 +22,7 @@ public class SparseDataFrame extends DataFrame{
     private ArrayList<COOValue>[] data;
     private String [] dataTypes;
     private int dataLength;
-    private Object [] hide;
+    private Value [] hide;
     public SparseDataFrame(DataFrame df ){
         super();
         this.dataLength = 0;
@@ -35,7 +40,7 @@ public class SparseDataFrame extends DataFrame{
     public SparseDataFrame(String fileName, String [] columnTypes, String [] columnNames){
         this(fileName, columnTypes, columnNames, null);
     }
-    public SparseDataFrame(String fileName, String [] columnTypes, String [] columnNames, Object [] hide){
+    public SparseDataFrame(String fileName, String [] columnTypes, String [] columnNames, Value [] hide){
         try (FileReader fr = new FileReader(fileName)) {
             BufferedReader br = new BufferedReader(fr);
             String line;
@@ -53,18 +58,21 @@ public class SparseDataFrame extends DataFrame{
                 this.dataTypes[i] = columnTypes[i].toLowerCase();
                 this.columnNames.put(columnNames[i], i);
             }
-            this.hide = new Object[this.dataTypes.length];
+            this.hide = new Value[this.dataTypes.length];
             if(hide == null){
                 for(i=0;i<this.dataTypes.length;i++){
                     switch(dataTypes[i].toLowerCase()){
                         case "int":
-                        this.hide[i] = 0;
+                        this.hide[i] = IValue.builder().setValue("0").build();
                         break;
                         case "double":
-                        this.hide[i] = 0.0;
+                        this.hide[i] = DValue.builder().setValue("0.0").build();
                         break;
                         case "string":
-                        this.hide[i] = "";
+                        this.hide[i] = SValue.builder().setValue("").build();
+                        break;
+                        case "date":
+                        this.hide[i] = DTValue.builder().setValue("").build();
                         break;
                         default:
                         throw new Error("unknown data type: "+this.dataTypes[i].toLowerCase());
@@ -76,27 +84,33 @@ public class SparseDataFrame extends DataFrame{
             for(int index=0;(line = br.readLine())!= null;index++) {
                 i=0;
                 for(String s: line.split(",")){
-                    Object el;
+                    Value el;
                     switch(columnTypes[i].toLowerCase()){
                         case "int":
-                            try{
-                                // hide[i] = Integer.parseInt(hide.toString());
-                                el = Integer.parseInt(s);
-                            }catch (NumberFormatException e){
-                                el = 0;
-                            }
+                        el = IValue.builder().setValue(s).build();
+                            // try{
+                            //     // hide[i] = Integer.parseInt(hide.toString());
+                            //     el = Integer.parseInt(s);
+                            // }catch (NumberFormatException e){
+                            //     el = 0;
+                            // }
                         break;
                         case "double":
-                            try{
-                                // hide = Double.parseDouble(hide.toString());
-                                el = Double.parseDouble(s);
-                            }catch (NumberFormatException e){
-                                el = 0.0;
-                            }
+                        el = DValue.builder().setValue(s).build();
+                            // try{
+                            //     // hide = Double.parseDouble(hide.toString());
+                            //     el = Double.parseDouble(s);
+                            // }catch (NumberFormatException e){
+                            //     el = 0.0;
+                            // }
                         break;
                         case "string":
-                            el = s;
+                        el = SValue.builder().setValue(s).build();
+                            // el = s;
                             // hide = hide.toString();
+                        break;
+                        case "date":
+                        el = DTValue.builder().setValue(s).build();
                         break;
                         default:
                         throw new Error("unknown data type: "+columnTypes[i].toLowerCase());
@@ -114,19 +128,22 @@ public class SparseDataFrame extends DataFrame{
 			e.printStackTrace();
 		}
     }
-    public void sparse(DataFrame df, Object [] hide){
+    public void sparse(DataFrame df, Value [] hide){
         if(hide == null){
-            this.hide = new Object[this.dataTypes.length];
+            this.hide = new Value[this.dataTypes.length];
             for(int i=0;i<this.dataTypes.length;i++){
                 switch(dataTypes[i].toLowerCase()){
                     case "int":
-                    this.hide[i] = 0;
+                    this.hide[i] = IValue.builder().setValue("0").build();
                     break;
                     case "double":
-                    this.hide[i] = 0.0;
+                    this.hide[i] = DValue.builder().setValue("0.0").build();
                     break;
                     case "string":
-                    this.hide[i] = "";
+                    this.hide[i] = SValue.builder().setValue("").build();
+                    break;
+                    case "date":
+                    this.hide[i] = DTValue.builder().setValue("").build();
                     break;
                     default:
                     throw new Error("unknown data type: "+this.dataTypes[i].toLowerCase());
@@ -137,8 +154,8 @@ public class SparseDataFrame extends DataFrame{
         this.dataLength += df.size(true);
         for (int i=0; i<df.size(true); i++){
             for (int j=0; j<df.size(); j++){
-                Object tmp = df.get(j).get(i);
-                if(!tmp.equals(hide[j]))
+                Value tmp = df.get(j).get(i);
+                if(!tmp.eq(this.hide[j]))
                     data[j].add(new COOValue(tmp, i));
                 // Data tmp = df.get(j);
                 // if(!tmp.equals(hide)){
@@ -169,7 +186,7 @@ public class SparseDataFrame extends DataFrame{
         return tmp;
     }
     public DataFrame toDense(int from, int to, String [] colNames){
-        Object [] tmp = new Object[to-from];
+        Value [] tmp = new Value[to-from];
         ArrayList<Data> dataA = new ArrayList<Data>();
         ArrayList<String> colsA = new ArrayList<String>();
         for (String s:colNames){
