@@ -255,3 +255,7 @@ public class DataFrame {
 
     public int size(){ return size(false);}
 }
+
+interface Applyable{
+    DataFrame apply(DataFrame df);
+}

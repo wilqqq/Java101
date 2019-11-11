@@ -3,9 +3,13 @@ package app;
 
 import dataFrame.DataFrame;
 import dtValue.DTValue;
+import iValue.IValue;
 import sValue.SValue;
 import sparseDataFrame.SparseDataFrame;
 import value.Value;
+
+import java.time.LocalDate;
+
 import dValue.DValue;
 import data.Data;
 
@@ -105,9 +109,10 @@ public class App {
         .setMonth("06")
         .setYear("1996")
         .build();
-        Value dtv2 = dtv1.create("1996/06/03-15:44:22");
+        Value dtv2 = dtv1.create("1996-06-03 15:44:22");
         System.out.println(dtv1+" >= "+dtv2+" = "+(dtv1.gte(dtv2)));
         System.out.println(dtv1+" <= "+dtv2+" = "+(dtv1.lte(dtv2)));
-        System.out.println(dtv1+" + 0001/01/01-01:01:01  = "+(dtv1.add(dtv1.create("0001/01/01-01:01:01"))));
+        System.out.println(dtv1+" + "+dtv2+" = "+(dtv1.add(dtv2).sub(DTValue.EPOCH_DT_VALUE))); //FOR MEAN USE SUM OF DIFFERENCEs BETWEEN DATES AND EPOCH
+        System.out.println(dtv1+" / 2  = "+(dtv1.div(IValue.builder().setValue("2").build())));
     }
 }
