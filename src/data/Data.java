@@ -11,7 +11,6 @@ import value.Value;
 
 public class Data {
     private String type;
-    // private ArrayList<Object> data;
     private ArrayList<Value> data;
 
     public Data (String dataType){
@@ -58,73 +57,25 @@ public class Data {
     public Data (Data source) {
         this(source.type);
         Data obj = source.copy(0, source.size());
-        this.data = obj.data;// possibly wrong / fixed
+        this.data = obj.data;
     }
     public String getType() {
         return this.type;
     }
     public int size() { return data.size();}
     public void set(Value element, int index) {
-        // System.out.println(type);
-        // System.out.println(element);
-        // switch ( type ) {
-        //     //cant use primitive in generic type, must use wrapper class
-        //     //use instanceof to check if it's a int 
-        //     case "int":
-        //         if(!(element instanceof Integer))
-        //             throw new Error("WRONG TYPE");
-        //         if(index >= data.size())
-        //             data.add(element);
-        //         else
-        //             data.set(index, element);
-        //         break;
-        //     case "double":
-        //         if(!(element instanceof Double))
-        //             throw new Error("WRONG TYPE");
-        //         if(index >= data.size())
-        //             data.add(element);
-        //         else
-        //             data.set(index, element);
-        //     break;
-        //     case "string":
-        //         if(!(element instanceof String))
-        //             throw new Error("WRONG TYPE");
-        //         if(index >= data.size())
-        //             data.add(element);
-        //         else
-        //             data.set(index, element);
-        //     break;
-        // }
         if(index >= data.size())
             data.add(element);
         else
             data.set(index, element);
     }
     public void add(Value element) {
-        // System.out.println(type);
-        // switch ( type ) {
-        //     //cant use primitive in generic type, must use wrapper class
-        //     //use instanceof to check if it's a int 
-        //     case "int":
-        //         if(!(element instanceof Integer))
-        //             throw new Error("WRONG TYPE");
-        //         break;
-        //     case "double":
-        //         if(!(element instanceof Double))
-        //             throw new Error("WRONG TYPE");
-        //     break;
-        //     case "string":
-        //         if(!(element instanceof String))
-        //             throw new Error("WRONG TYPE");
-        //     break;
-        // }
         data.add(element);
     }
     public void set(Value [] elements) {
         try {
             for(Value e: elements)
                 add(e);
-            //  set(e, this.data.size();
         } catch (Exception e) {
             throw new Error("WRONG TYPE AT: "+e.toString());
         }
@@ -155,11 +106,10 @@ public class Data {
     public Data copy(int from, int to, boolean copy){
         if(to < 0)
             to = data.size() + 1 +to;
-        if(from >= data.size() || from > to)
+        if(from > data.size() || from > to)
             throw new IndexOutOfBoundsException();
         Data ret = new Data(this.type);
         for(; from<to; from++){
-            //System.out.println(from);
             Value v = data.get(from);
             //TODO lazy clone
             ret.set(copy?(Value)v.create(v.toString()):v,from); //using add

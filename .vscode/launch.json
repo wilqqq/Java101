@@ -2,8 +2,17 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - JavaFX",
+            "request": "launch",
+            "vmArgs": "--module-path /usr/lib/jvm/jdk-13/lib --add-modules javafx.controls,javafx.fxml",
+            "mainClass": "app.App",
+            "projectName": "Lab1"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - App",
             "request": "launch",
+            //"vmArgs": "--module-path /usr/lib/jvm/jdk-13/lib --add-modules javafx.controls,javafx.fxml",
             "mainClass": "app.App",
             "projectName": "Lab1"
         }

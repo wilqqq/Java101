@@ -52,18 +52,7 @@ public class DataFrame {
             if (columnNames == null) {
                 line = br.readLine();
                 columnNames = line.split(",");
-                // System.out.println(columnNames);
             }
-            // br.mark(0); //<- aint gonna work for a big file
-            // count elements + data integrity check (no missing values)
-            // int colSize = 0;
-            // while ((line = br.readLine())!= null) {
-            // colSize++;
-            // if ( line.split(",").length != columnNames.length)
-            // throw new Error("missing data in line: " + colSize);
-            // }
-            // br.close();
-            // br = new BufferedReader(new FileReader(fileName));
             this.data = new Data[columnTypes.length];
             this.columnNames = new TreeMap<String, Integer>();
             int i = 0;
@@ -78,19 +67,9 @@ public class DataFrame {
                     switch (columnTypes[i].toLowerCase()) {
                     case "int":
                         el = IValue.builder().setValue(s).build();
-                        // try{
-                        // el = Integer.parseInt(s);
-                        // }catch (NumberFormatException e){
-                        // el = 0;
-                        // }
                         break;
                     case "double":
                         el = DValue.builder().setValue(s).build();
-                        // try{
-                        // el = Double.parseDouble(s);
-                        // }catch (NumberFormatException e){
-                        // el = 0.0;
-                        // }
                         break;
                     case "string":
                         el = SValue.builder().setValue(s).build();
@@ -103,15 +82,8 @@ public class DataFrame {
                         throw new Error("unknown data type: " + columnTypes[i].toLowerCase());
                     }
                     this.data[i++].add(el);
-                    // System.out.println(data[i-1]+"|"+el);
                 }
-                // System.out.println(line);
-                // break;
             }
-            // this.columnNames = new TreeMap<String, Integer>();
-            // for (i=0; i<columnNames.length; i++){
-            // this.data[i] = new Data(columnTypes[i]);
-            // }
             // automatic closed with try-with-resources
         } catch (IOException e) {
             e.printStackTrace();
@@ -142,10 +114,7 @@ public class DataFrame {
             throw new Error("Wrong dimensions");
         try {
             // TODO - maping and smart data input
-            // for(Data d: elements){
             for (int i = 0; i < data.length; i++) {
-                // Integer i = this.columnNames.get(arg0)
-                // System.out.println(elements[i].getType().equals(data[i].getType()));
                 if (elements[i].getType().equals(data[i].getType())){
                     data[i].set(elements[i].copy(0, -1));
                 }else
@@ -159,25 +128,17 @@ public class DataFrame {
     public String toString() {
         String tmp = "";
         String all;
-        // int len = 8;
         // TODO wrong order (alphabetical)
         for (String s : columnNames.keySet()) {
             tmp += s + "\t";
-            // len += s.length()/8;
         }
         all = tmp + "\n";
-        // len += tmp.length();
         tmp = "";
         for (int j = 0; j < data.length; j++)
             tmp += data[j].getType() + "\t";
-        // if(tmp.length()>len)
-        // len = tmp.length();
         all += tmp + "\n";
         for (int i = 0; i < data[0].size(); i++) {
             tmp = "";
-            // for(int j=0; j<len; j++)
-            // tmp += "-";
-            // tmp += "\n";
             for (int j = 0; j < data.length; j++)
                 tmp += data[j].get(i).toString() + "\t";
             all += tmp + "\n";
@@ -186,7 +147,21 @@ public class DataFrame {
     }
 
     public void print() {
-        System.out.println(toString());
+        String tmp = "";
+        // TODO wrong order (alphabetical)
+        for (String s : columnNames.keySet())
+            tmp += s + "\t";
+        System.out.println(tmp);
+        tmp = "";
+        for (int j = 0; j < data.length; j++)
+            tmp += data[j].getType() + "\t";
+        System.out.println(tmp);
+        for (int i = 0; i < data[0].size(); i++) {
+            tmp = "";
+            for (int j = 0; j < data.length; j++)
+                tmp += data[j].get(i).toString() + "\t";
+            System.out.println(tmp);
+        }
     }
 
     public Data get(String columnName, int from, int to, boolean copy) {
@@ -205,11 +180,15 @@ public class DataFrame {
         return get(columnName, 0, -1);
     }
 
-    public Data get(int index) {
+    public Data get(int index, boolean copy) {
         if (index < data.length)
-            return data[index].copy(0, -1);
+            return copy?data[index].copy(0, -1):data[index];
         else
             return null;
+    }
+
+    public Data get(int index) {
+        return get(index, true);
     }
 
     public DataFrame get(String[] cols, boolean copy, int from, int to) {
@@ -217,7 +196,6 @@ public class DataFrame {
         String[] types = new String[cols.length];
         String[] names = new String[cols.length];
         int it = 0;
-        // TODO copy
         if (copy) {
             for (String s : cols) {
                 columns[it] = get(s, from, to);
@@ -315,8 +293,6 @@ public class DataFrame {
             for (Data column: columns){
                 values.add(column.get(i));
             }
-            DataFrame hlpr = result.get(values);
-            boolean tr = result.keySet().contains(values);
             if (!result.containsKey(values)){
                 result.put(values, iloc(i));
             }
@@ -343,7 +319,15 @@ public class DataFrame {
         // TODO apply() documentation
         @Override
         public DataFrame apply(Applyable a) {
-            return null;
+            DataFrame df = ((DataFrame)map.values().toArray()[0]);
+            String [] dfNames = df.getColumnNames();
+            String [] dfTypes = df.getDataTypes();
+            DataFrame result = new DataFrame(dfNames, dfTypes);
+            for (List<Value> values: map.keySet()){
+                DataFrame dataFrameHelp = map.get(values);
+                result.add(a.apply(dataFrameHelp).data);
+            }
+            return result;
         }
 
         // TODO max() documentation
@@ -383,7 +367,7 @@ public class DataFrame {
                     // Data [] add = new Data[toAdd.size()];
                     // for(int i=0; i<add.length; i++)
                     //     add[i] = new
-                    result.add(toAdd);
+                result.add(toAdd);
                 // }
                 // catch (IOException e){
                 //     System.out.println("Adding elements to DataFrame unsuccessful");
@@ -395,16 +379,45 @@ public class DataFrame {
         // TODO mean() documentation
         @Override
         public DataFrame mean() {
-            DataFrame df = sum();
+            DataFrame df = ((DataFrame)map.values().toArray()[0]);
             String [] dfNames = df.getColumnNames();
-            for(int j=0;j<df.size();j++){ //change to for j
-                if(colNames.contains(dfNames[j]))
-                    continue;
-                Data column = df.data[j];
-                for(int i=0; i<column.size(); i++)
-                    column.get(i,false).div(IValue.builder().setValue(df.size(true)).build());
+            String [] dfTypes = df.getDataTypes();
+            DataFrame result = new DataFrame(dfNames, dfTypes);
+            for (List<Value> values: map.keySet()){
+                // List<Value> toAdd = new ArrayList<>(values);//wrong order may occur
+                Data [] toAdd = new Data[dfNames.length];
+                int valIndex = 0;
+                DataFrame dataFrameHelp = map.get(values);
+                String [] names = dataFrameHelp.getColumnNames();
+                String [] types = dataFrameHelp.getDataTypes();
+
+                for (int k=0; k<dataFrameHelp.size(); k++){
+                    if(colNames.contains(names[k])){
+                        toAdd[k] = new Data(types[k], values.get(valIndex++));
+                        continue;
+                    }
+
+                    Data column = dataFrameHelp.data[k];
+
+                    Value sum = column.get(0);
+                    for (int i=1; i<column.size();i++){
+                        sum.add(column.get(i));
+                    }
+                    // toAdd.add(max);
+                    toAdd[k] = new Data(types[k], sum.div(IValue.builder().setValue(column.size()).build()));
+
+                }
+                // try{
+                    // Data [] add = new Data[toAdd.size()];
+                    // for(int i=0; i<add.length; i++)
+                    //     add[i] = new
+                result.add(toAdd);
+                // }
+                // catch (IOException e){
+                //     System.out.println("Adding elements to DataFrame unsuccessful");
+                // }
             }
-            return df;
+            return result;
         }
 
         // TODO min() documentation
@@ -444,7 +457,7 @@ public class DataFrame {
                     // Data [] add = new Data[toAdd.size()];
                     // for(int i=0; i<add.length; i++)
                     //     add[i] = new
-                    result.add(toAdd);
+                result.add(toAdd);
                 // }
                 // catch (IOException e){
                 //     System.out.println("Adding elements to DataFrame unsuccessful");
@@ -456,7 +469,17 @@ public class DataFrame {
         // TODO std() documentation
         @Override
         public DataFrame std() {
-            return null;
+            DataFrame df = var();
+            String [] dfNames = df.getColumnNames();
+            for(int j=0;j<df.size();j++){ //change to for j
+                if(colNames.contains(dfNames[j])){
+                    continue;
+                }
+                Data column = df.data[j];
+                for(int i=0; i<column.size(); i++)
+                    column.get(i,false).pow(DValue.builder().setValue(0.5).build());
+            }
+            return df;
         }
 
         // TODO sum() documentation
@@ -476,7 +499,7 @@ public class DataFrame {
 
                 for (int k=0; k<dataFrameHelp.size(); k++){
                     if(colNames.contains(names[k])){
-                        toAdd[k] = new Data(types[k], values.get(valIndex));
+                        toAdd[k] = new Data(types[k], values.get(valIndex++));
                         continue;
                     }
 
@@ -494,7 +517,7 @@ public class DataFrame {
                     // Data [] add = new Data[toAdd.size()];
                     // for(int i=0; i<add.length; i++)
                     //     add[i] = new
-                    result.add(toAdd);
+                result.add(toAdd);
                 // }
                 // catch (IOException e){
                 //     System.out.println("Adding elements to DataFrame unsuccessful");
@@ -506,7 +529,47 @@ public class DataFrame {
         // TODO var() documentation
         @Override
         public DataFrame var() {
-            return null;
+            DataFrame meanDf = mean();
+            DataFrame df = ((DataFrame)map.values().toArray()[0]);
+            String [] dfNames = df.getColumnNames();
+            String [] dfTypes = df.getDataTypes();
+            DataFrame result = new DataFrame(dfNames, dfTypes);
+            for (List<Value> values: map.keySet()){
+                // List<Value> toAdd = new ArrayList<>(values);//wrong order may occur
+                Data [] toAdd = new Data[dfNames.length];
+                int valIndex = 0;
+                DataFrame dataFrameHelp = map.get(values);
+                String [] names = dataFrameHelp.getColumnNames();
+                String [] types = dataFrameHelp.getDataTypes();
+
+                for (int k=0; k<dataFrameHelp.size(); k++){
+                    if(colNames.contains(names[k])){
+                        toAdd[k] = new Data(types[k], values.get(valIndex++));
+                        continue;
+                    }
+
+                    Data column = dataFrameHelp.data[k];
+                    Value mean = meanDf.data[k].get(0);
+                    Value sum = column.get(0,false).sub(mean).pow(IValue.builder().setValue(2).build());
+                    
+                    for (int i=1; i<column.size();i++){
+                        sum.add(column.get(i,false).sub(mean).pow(IValue.builder().setValue(2).build()));
+                    }
+                    // toAdd.add(max);
+                    toAdd[k] = new Data(types[k], sum);
+
+                }
+                // try{
+                    // Data [] add = new Data[toAdd.size()];
+                    // for(int i=0; i<add.length; i++)
+                    //     add[i] = new
+                result.add(toAdd);
+                // }
+                // catch (IOException e){
+                //     System.out.println("Adding elements to DataFrame unsuccessful");
+                // }
+            }
+            return result;
         }
     
         
@@ -526,22 +589,4 @@ interface Groupby{
 
 interface Applyable{
     DataFrame apply(DataFrame df);
-}
-
-class Mediana implements Applyable{
-    @Override
-    public DataFrame apply(DataFrame df){
-        DataFrame outPut = new DataFrame(df.getColumnNames(),df.getDataTypes());
-        int medianaIndex = df.size(true)/2;
-        for(int i=0;i<outPut.size();i++){
-            outPut.get(i).add(outPut.get(i).get(medianaIndex));
-        }
-        // for(int i=0;i<df.size();i++){ //each column
-        //     for(int j=0;j<df.size(true);j++){ //each element in row
-        //         System.out.println(df.get(i).get(j));
-        //         break;
-        //     }
-        // }
-        return outPut;
-    }
 }

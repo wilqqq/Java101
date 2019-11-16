@@ -2,18 +2,66 @@
 package app;
 
 import dataFrame.DataFrame;
+import dataFrame.*;
 import dtValue.DTValue;
 import iValue.IValue;
 import sValue.SValue;
 import sparseDataFrame.SparseDataFrame;
 import value.Value;
 
+import java.io.File;
 import java.time.LocalDate;
 
 import dValue.DValue;
 import data.Data;
 
-public class App {
+// import javafx.application.Application;
+// import javafx.scene.Scene;
+// import javafx.scene.control.Button;
+// import javafx.scene.control.Label;
+// import javafx.scene.layout.StackPane;
+// import javafx.scene.layout.VBox;
+// import javafx.stage.FileChooser;
+// import javafx.stage.Stage;
+
+
+public class App{
+//public class App extends Application{
+
+    public static String javaVersion() {
+        return System.getProperty("java.version");
+    }
+
+    public static String javafxVersion() {
+        return System.getProperty("javafx.version");
+    }
+
+    // @Override
+    // public void start(Stage stage) {
+    //     stage.setTitle("DataFrame on JavaFX");
+
+    //     FileChooser fChoose = new FileChooser();
+    //     fChoose.setInitialDirectory(new File("data"));
+    //     fChoose.setInitialFileName("mingroupby.csv");
+
+    //     Button btn = new Button("Select File");
+    //     btn.setOnAction(event->{
+    //         File sFile = fChoose.showOpenDialog(stage);
+    //     });
+
+    //     VBox vBox = new VBox(btn);
+    //     Scene scene = new Scene(vBox, 640, 480);
+
+    //     // var javaVersion = javaVersion();
+    //     // var javafxVersion = javafxVersion();
+
+    //     // var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
+    //     // var scene = new Scene(vBox, 640, 480);
+
+    //     stage.setScene(scene);
+    //     stage.show();
+    // }
+
     public static void main(String[] args) throws Exception {
         // System.out.println("Henlo Java");
 
@@ -118,15 +166,22 @@ public class App {
         
         System.out.println("\n\n--- Group by! ---");
         DataFrame dfgr = new  DataFrame( 
-            "data/groupby.csv",
+            "data/mingroupby.csv",
+            // "data/groupby.csv",
             new String[]{"string","date","double","double"},
             null
         );
-        dfgr.iloc(5,10,false).print();
-        dfgr.groupby(new String[]{"id"}).sum().print();
-        //dfgr.groupby(new String[]{"id"}).mean().print();
+        dfgr.print();
+        dfgr.groupby(new String[]{"id","date"}).sum().print();
+        dfgr.groupby(new String[]{"id","date"}).mean().print();
+        dfgr.groupby(new String[]{"id","date"}).var().print();
+        dfgr.groupby(new String[]{"id","date"}).std().print();
+        dfgr.groupby(new String[]{"id","date"}).min().print();
+        dfgr.groupby(new String[]{"id","date"}).max().print();
+        dfgr.groupby(new String[]{"id","date"}).apply(new Mediana()).print();
 
 
         // System.out.println("\n\n--- GUI! ---");
+        // launch();
     }
 }

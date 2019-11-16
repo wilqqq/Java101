@@ -211,6 +211,8 @@ public class DTValue extends Value {
 
     @Override
     public boolean equals(Object other) {
+        if(other instanceof DTValue)
+            return eq((DTValue)other);
         return other.equals(this);
     }
 
