@@ -74,7 +74,8 @@ public class SValue extends Value {
 
     @Override
     public boolean equals(Object other) {
-        return this.value.equals(other);
+        // return this.value.equals(other);
+        return eq((Value)other);
     }
 
     @Override

@@ -28,10 +28,10 @@ public final class COOValue extends Value {
 
     @Override
     public Value add(Value obj) {
-        if(obj instanceof COOValue){
-            COOValue o = (COOValue)obj;
-            if(this.spot == o.spot)
-                return new COOValue((this.value.add(o.value)),spot);
+        if (obj instanceof COOValue) {
+            COOValue o = (COOValue) obj;
+            if (this.spot == o.spot)
+                return new COOValue((this.value.add(o.value)), spot);
         }
         return this;
     }
@@ -48,19 +48,19 @@ public final class COOValue extends Value {
 
     @Override
     public Value div(Value obj) {
-        if(obj instanceof COOValue){
-            COOValue o = (COOValue)obj;
-            if(this.spot == o.spot)
-                return new COOValue((this.value.div(o.value)),spot);
+        if (obj instanceof COOValue) {
+            COOValue o = (COOValue) obj;
+            if (this.spot == o.spot)
+                return new COOValue((this.value.div(o.value)), spot);
         }
         return this;
     }
 
     @Override
     public boolean eq(Value obj) {
-        if(obj instanceof COOValue){
-            COOValue o = (COOValue)obj;
-            if(this.spot == o.spot)
+        if (obj instanceof COOValue) {
+            COOValue o = (COOValue) obj;
+            if (this.spot == o.spot)
                 return this.value.eq(obj);
         }
         return false;
@@ -73,9 +73,9 @@ public final class COOValue extends Value {
 
     @Override
     public boolean gte(Value obj) {
-        if(obj instanceof COOValue){
-            COOValue o = (COOValue)obj;
-            if(this.spot == o.spot)
+        if (obj instanceof COOValue) {
+            COOValue o = (COOValue) obj;
+            if (this.spot == o.spot)
                 return ((this.value.gte(o.value)));
         }
         return false;
@@ -88,9 +88,9 @@ public final class COOValue extends Value {
 
     @Override
     public boolean lte(Value obj) {
-        if(obj instanceof COOValue){
-            COOValue o = (COOValue)obj;
-            if(this.spot == o.spot)
+        if (obj instanceof COOValue) {
+            COOValue o = (COOValue) obj;
+            if (this.spot == o.spot)
                 return ((this.value.lte(o.value)));
         }
         return false;
@@ -98,19 +98,19 @@ public final class COOValue extends Value {
 
     @Override
     public Value mul(Value obj) {
-        if(obj instanceof COOValue){
-            COOValue o = (COOValue)obj;
-            if(this.spot == o.spot)
-                return new COOValue((this.value.mul(o.value)),spot);
+        if (obj instanceof COOValue) {
+            COOValue o = (COOValue) obj;
+            if (this.spot == o.spot)
+                return new COOValue((this.value.mul(o.value)), spot);
         }
         return this;
     }
 
     @Override
     public boolean neq(Value obj) {
-        if(obj instanceof COOValue){
-            COOValue o = (COOValue)obj;
-            if(this.spot == o.spot)
+        if (obj instanceof COOValue) {
+            COOValue o = (COOValue) obj;
+            if (this.spot == o.spot)
                 return this.value.neq(o.value);
         }
         return true;
@@ -118,20 +118,20 @@ public final class COOValue extends Value {
 
     @Override
     public Value pow(Value obj) {
-        if(obj instanceof COOValue){
-            COOValue o = (COOValue)obj;
-            if(this.spot == o.spot)
-                return new COOValue((this.value.pow(o.value)),spot);
+        if (obj instanceof COOValue) {
+            COOValue o = (COOValue) obj;
+            if (this.spot == o.spot)
+                return new COOValue((this.value.pow(o.value)), spot);
         }
         return this;
     }
 
     @Override
     public Value sub(Value obj) {
-        if(obj instanceof COOValue){
-            COOValue o = (COOValue)obj;
-            if(this.spot == o.spot)
-                return new COOValue((this.value.sub(o.value)),spot);
+        if (obj instanceof COOValue) {
+            COOValue o = (COOValue) obj;
+            if (this.spot == o.spot)
+                return new COOValue((this.value.sub(o.value)), spot);
         }
         return this;
     }

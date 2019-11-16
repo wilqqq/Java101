@@ -19,5 +19,5 @@ public abstract class Value implements Cloneable{
     public abstract int hashCode();
     public abstract Value create(String s);
     public abstract Object clone() throws CloneNotSupportedException;
-    // public abstract Class<? extends Object> getValue();
+    // public abstract Class<? extends Object> getV();
 }

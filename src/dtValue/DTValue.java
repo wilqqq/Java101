@@ -59,9 +59,9 @@ public class DTValue extends Value {
         }
 
         public Builder setValue(String s) {
-            String [] tmp=s.split("-");
+            String [] tmp=s.split(" ");
             if(tmp.length == 2){
-                String [] date = tmp[0].split("/");
+                String [] date = tmp[0].split("-");
                 if(date[0].matches("^[0-9]{4}$"))
                     value[0] = Integer.parseInt(date[0]);
                 // for(i=1;i<date.length;i++)
@@ -77,6 +77,29 @@ public class DTValue extends Value {
                 for(int i=1;i<time.length;i++)
                     if(time[i].matches("^[0-5][0-9]$"))
                         value[i+3] = Integer.parseInt(time[i]);
+            }else if(tmp.length == 1){
+                String [] date = s.split("-");
+                if(date.length==3){
+                    if(date[0].matches("^[0-9]{4}$"))
+                        value[0] = Integer.parseInt(date[0]);
+                    // for(i=1;i<date.length;i++)
+                    if(date[1].matches("^0[0-9]|1[0-2]$"))
+                        value[1] = Integer.parseInt(date[1]);
+                    if(date[2].matches("^[0-2][0-9]|3[0-1]$"))
+                        value[2] = Integer.parseInt(date[2]);
+                    if(value[1] == 2 && value[2] >= 30)
+                        value[2] = 28;
+                    return this;
+                }else{
+                    String [] time = s.split(":");
+                    if(s.length()<3)
+                        return this;
+                    if(time[0].matches("^[0-1][0-9]|2[0-4]$"))
+                        value[3] = Integer.parseInt(time[0]);
+                    for(int i=1;i<time.length;i++)
+                        if(time[i].matches("^[0-5][0-9]$"))
+                            value[i+3] = Integer.parseInt(time[i]);
+                }
             }
             return this;
         }

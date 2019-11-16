@@ -85,34 +85,48 @@ public class App {
         // DataFrame hlpr = sdf2.toDense(5,10,new String[]{"last","x","y","a","b","c"});
         // hlpr.print();
 
-        System.out.println("\n\n--- Value class and its inheritances! ---");
-        DValue dv = DValue.builder().setValue("12.34").build();
-        Value dv0 = dv.create("0.0");
-        DValue dv2 = (DValue)dv.clone();
-        System.out.println(dv+"+"+dv2+"="+(dv.add(dv2)));
-        System.out.println(dv+"*"+dv2+"="+(dv.mul(dv2)));
-        System.out.println(dv+"-"+dv2+"="+(dv.sub(dv2)));
-        System.out.println(dv+"/"+dv2+"="+(dv.div(dv2)));
-        try {
-            dv.div(dv0);
-        } catch (Exception e) {
-            System.out.println(dv+"/"+dv0+"=Exception: "+e.getMessage());
-        }
-        SValue sv1 = SValue.builder().setValue("valuevalue").build();
-        Value sv2 = sv1.create("vvalu");
-        System.out.println(sv1+" rotfl with "+sv2+" = "+(sv1.mul(sv2))+"["+sv1.getValue().length()+"] then derotf: "+sv1.div(sv2)+"["+sv1.getValue().length()+"]");
-        DTValue dtv1 = DTValue.builder()
-        .setSeconds("00")
-        .setMinutes("44")
-        .setHour("12")
-        .setDay("03")
-        .setMonth("06")
-        .setYear("1996")
-        .build();
-        Value dtv2 = dtv1.create("1996-06-03 15:44:22");
-        System.out.println(dtv1+" >= "+dtv2+" = "+(dtv1.gte(dtv2)));
-        System.out.println(dtv1+" <= "+dtv2+" = "+(dtv1.lte(dtv2)));
-        System.out.println(dtv1+" + "+dtv2+" = "+(dtv1.add(dtv2).sub(DTValue.EPOCH_DT_VALUE))); //FOR MEAN USE SUM OF DIFFERENCEs BETWEEN DATES AND EPOCH
-        System.out.println(dtv1+" / 2  = "+(dtv1.div(IValue.builder().setValue("2").build())));
+        // System.out.println("\n\n--- Value class and its inheritances! ---");
+        // DValue dv = DValue.builder().setValue("12.34").build();
+        // Value dv0 = dv.create("0.0");
+        // DValue dv2 = (DValue)dv.clone();
+        // System.out.println(dv+"+"+dv2+"="+(dv.add(dv2)));
+        // System.out.println(dv+"*"+dv2+"="+(dv.mul(dv2)));
+        // System.out.println(dv+"-"+dv2+"="+(dv.sub(dv2)));
+        // System.out.println(dv+"/"+dv2+"="+(dv.div(dv2)));
+        // try {
+        //     dv.div(dv0);
+        // } catch (Exception e) {
+        //     System.out.println(dv+"/"+dv0+"=Exception: "+e.getMessage());
+        // }
+        // SValue sv1 = SValue.builder().setValue("valuevalue").build();
+        // Value sv2 = sv1.create("vvalu");
+        // System.out.println(sv1+" rotfl with "+sv2+" = "+(sv1.mul(sv2))+"["+sv1.getValue().length()+"] then derotf: "+sv1.div(sv2)+"["+sv1.getValue().length()+"]");
+        // DTValue dtv1 = DTValue.builder()
+        // .setSeconds("00")
+        // .setMinutes("44")
+        // .setHour("12")
+        // .setDay("03")
+        // .setMonth("06")
+        // .setYear("1996")
+        // .build();
+        // Value dtv2 = dtv1.create("1996-06-03 15:44:22");
+        // System.out.println(dtv1+" >= "+dtv2+" = "+(dtv1.gte(dtv2)));
+        // System.out.println(dtv1+" <= "+dtv2+" = "+(dtv1.lte(dtv2)));
+        // System.out.println(dtv1+" + "+dtv2+" = "+(dtv1.add(dtv2).sub(DTValue.EPOCH_DT_VALUE))); //FOR MEAN USE SUM OF DIFFERENCEs BETWEEN DATES AND EPOCH
+        // System.out.println(dtv1+" / 2  = "+(dtv1.div(IValue.builder().setValue("2").build())));
+        
+        
+        System.out.println("\n\n--- Group by! ---");
+        DataFrame dfgr = new  DataFrame( 
+            "data/groupby.csv",
+            new String[]{"string","date","double","double"},
+            null
+        );
+        dfgr.iloc(5,10,false).print();
+        dfgr.groupby(new String[]{"id"}).sum().print();
+        //dfgr.groupby(new String[]{"id"}).mean().print();
+
+
+        // System.out.println("\n\n--- GUI! ---");
     }
 }

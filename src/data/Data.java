@@ -23,6 +23,11 @@ public class Data {
         data = new ArrayList<Value>();
         set(elements);
     }
+    public Data (String dataType, Value element){
+        this.type = dataType.toLowerCase();
+        data = new ArrayList<Value>();
+        add(element);
+    }
     public Data (String dataType, Object [] elements){
         this.type = dataType.toLowerCase();
         data = new ArrayList<Value>();
@@ -118,17 +123,36 @@ public class Data {
     public void set(Value [] elements) {
         try {
             for(Value e: elements)
-                set(e, this.data.size());
+                add(e);
+            //  set(e, this.data.size();
+        } catch (Exception e) {
+            throw new Error("WRONG TYPE AT: "+e.toString());
+        }
+    }
+    public void set(Data elements) {
+        try {
+            for(int e=0;e<elements.size();e++)
+                add(elements.get(e));
         } catch (Exception e) {
             throw new Error("WRONG TYPE AT: "+e.toString());
         }
     }
     public Value get(int index){
+        return get(index, true);
+    }
+    public Value get(int index, boolean copy){
         if(index >= data.size())
             throw new IndexOutOfBoundsException();
+        if(copy){
+            try {
+                return (Value)data.get(index).clone();
+            } catch (Exception e) {
+                return data.get(index);
+            }
+        }
         return data.get(index);
     }
-    public Data copy(int from, int to){
+    public Data copy(int from, int to, boolean copy){
         if(to < 0)
             to = data.size() + 1 +to;
         if(from >= data.size() || from > to)
@@ -136,9 +160,14 @@ public class Data {
         Data ret = new Data(this.type);
         for(; from<to; from++){
             //System.out.println(from);
-            ret.set(data.get(from),from); //using add
+            Value v = data.get(from);
+            //TODO lazy clone
+            ret.set(copy?(Value)v.create(v.toString()):v,from); //using add
         }
         return ret;
+    }
+    public Data copy(int from, int to){
+        return copy(from, to, true);
     }
     public String toString(){
         String ret = type.toString() + ": [ ";
