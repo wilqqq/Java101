@@ -50,7 +50,7 @@ public class Data {
                 castObj[i++] = DTValue.builder().setValue(o.toString()).build();
             break;
             default:
-            throw new Error("unknown data type: "+dataType.toLowerCase());
+            throw new Error("unknown data type: "+dataType.toLowerCase());//TODO own exception being trown
         }
         set(castObj);
     }
@@ -76,7 +76,7 @@ public class Data {
         try {
             for(Value e: elements)
                 add(e);
-        } catch (Exception e) {
+        } catch (Exception e) {//TODO own exception being trown
             throw new Error("WRONG TYPE AT: "+e.toString());
         }
     }
@@ -84,7 +84,7 @@ public class Data {
         try {
             for(int e=0;e<elements.size();e++)
                 add(elements.get(e));
-        } catch (Exception e) {
+        } catch (Exception e) {//TODO own exception being trown
             throw new Error("WRONG TYPE AT: "+e.toString());
         }
     }

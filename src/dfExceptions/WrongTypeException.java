@@ -32,8 +32,7 @@ public class WrongTypeException extends Exception {
     }
 
     public void printMessage(){
-        System.out.println("Invalid operation for column: "+colName+ "\ntypes incompatible in index: "+index+"\n" +
-                "Expected type: "+valueExpected.toString()+"\nActual type: "+actualValue.toString());
+        System.out.println(getStringMessage());
     }
 
     public String getStringMessage(){
