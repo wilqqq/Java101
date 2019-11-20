@@ -164,23 +164,24 @@ public class App{
         // System.out.println(dtv1+" / 2  = "+(dtv1.div(IValue.builder().setValue("2").build())));
         
         
-        System.out.println("\n\n--- Group by! ---");
-        DataFrame dfgr = new  DataFrame( 
-            "data/mingroupby.csv",
-            // "data/groupby.csv",
-            new String[]{"string","date","double","double"},
-            null
-        );
-        dfgr.print();
-        dfgr.groupby(new String[]{"id","date"}).sum().print();
-        dfgr.groupby(new String[]{"id","date"}).mean().print();
-        dfgr.groupby(new String[]{"id","date"}).var().print();
-        dfgr.groupby(new String[]{"id","date"}).std().print();
-        dfgr.groupby(new String[]{"id","date"}).min().print();
-        dfgr.groupby(new String[]{"id","date"}).max().print();
-        dfgr.groupby(new String[]{"id","date"}).apply(new Mediana()).print();
+        // System.out.println("\n\n--- Group by! ---");
+        // DataFrame dfgr = new  DataFrame( 
+        //     "data/groupby.csv",
+        //     // "data/groupby.csv",
+        //     new String[]{"string","date","double","double"},
+        //     null
+        // );
+        // dfgr.print();
+        // dfgr.groupby(new String[]{"id","date"}).sum().print();
+        // dfgr.groupby(new String[]{"id","date"}).mean().print();
+        // dfgr.groupby(new String[]{"id","date"}).var().print();
+        // dfgr.groupby(new String[]{"id","date"}).std().print();
+        // dfgr.groupby(new String[]{"id","date"}).min().print();
+        // dfgr.groupby(new String[]{"id","date"}).max().print();
+        // dfgr.groupby(new String[]{"id","date"}).apply(new Mediana()).print();
 
 
+        //needs uncommenting a lot of stuff!
         // System.out.println("\n\n--- GUI! ---");
         // launch();
     }
