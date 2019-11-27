@@ -16,13 +16,20 @@ import dValue.DValue;
 import data.Data;
 
 // import javafx.application.Application;
+// import javafx.scene.Group;
 // import javafx.scene.Scene;
+// import javafx.scene.chart.NumberAxis;
+// import javafx.scene.chart.ScatterChart;
+// import javafx.scene.chart.XYChart;
 // import javafx.scene.control.Button;
 // import javafx.scene.control.Label;
 // import javafx.scene.layout.StackPane;
 // import javafx.scene.layout.VBox;
 // import javafx.stage.FileChooser;
 // import javafx.stage.Stage;
+
+// import mariadb;
+import java.sql.*;
 
 
 public class App{
@@ -36,32 +43,100 @@ public class App{
         return System.getProperty("javafx.version");
     }
 
-    // @Override
-    // public void start(Stage stage) {
-    //     stage.setTitle("DataFrame on JavaFX");
+    /*
+    DataFrame dffx;
 
-    //     FileChooser fChoose = new FileChooser();
-    //     fChoose.setInitialDirectory(new File("data"));
-    //     fChoose.setInitialFileName("mingroupby.csv");
+    private Group drawDF(String x_column, String y_column){
+        System.out.println("--- GUI SCATTER PLOT");
 
-    //     Button btn = new Button("Select File");
-    //     btn.setOnAction(event->{
-    //         File sFile = fChoose.showOpenDialog(stage);
-    //     });
+        //Defining the x axis               
+        NumberAxis xAxis = new NumberAxis(0.0, 0.0038, 10); 
+        xAxis.setLabel(x_column);          
+                
+        //Defining the y axis 
+        NumberAxis yAxis = new NumberAxis(0, 0.076, 10); 
+        yAxis.setLabel(y_column);
 
-    //     VBox vBox = new VBox(btn);
-    //     Scene scene = new Scene(vBox, 640, 480);
+        //Creating the Scatter chart 
+        ScatterChart<Number, Number> scatterChart = new ScatterChart(xAxis, yAxis); 
 
-    //     // var javaVersion = javaVersion();
-    //     // var javafxVersion = javafxVersion();
+        //Prepare XYChart.Series objects by setting data 
+        XYChart.Series series = new XYChart.Series();  
 
-    //     // var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-    //     // var scene = new Scene(vBox, 640, 480);
+        //fill the scatterplot with data
+        //TODO what if not present
+        Data x = dffx.get(x_column);
+        Data y = dffx.get(y_column);
 
-    //     stage.setScene(scene);
-    //     stage.show();
-    // }
+        for(int i=0; i<x.size(); i++)
+            series.getData().add(new XYChart.Data(((DValue)x.get(i)).getValue(), ((DValue)y.get(i)).getValue())); 
+        // series.getData().add(new XYChart.Data(4, 5.5)); 
+        // series.getData().add(new XYChart.Data(11, 14)); 
+        // series.getData().add(new XYChart.Data(4, 5)); 
+        // series.getData().add(new XYChart.Data(3, 3.5)); 
+        // series.getData().add(new XYChart.Data(6.5, 7)); 
 
+        //Setting the data to scatter chart        
+        scatterChart.getData().addAll(series);
+        scatterChart.setLegendVisible(false);
+        // scatterChart.setBackground(arg0);
+
+        return new Group(scatterChart);
+    }
+
+    @Override
+    public void start(Stage stage) {
+        stage.setTitle("DataFrame on JavaFX");
+
+        FileChooser fChoose = new FileChooser();
+        fChoose.setInitialDirectory(new File("data"));
+        fChoose.setInitialFileName("mingroupby.csv");
+
+        Button btn = new Button("Select File");
+
+        btn.setOnAction(event->{
+            File sFile = fChoose.showOpenDialog(stage);
+            System.out.println("file name: "+sFile.getName());
+            DataFrame df = new DataFrame(
+                "data/"+sFile.getName(),
+                new String[]{"double","double","double"},
+                null
+            );
+            dffx = df.iloc(0, 40);
+            System.out.println("done");
+            // df.print(); // THREADING ERROR 
+        });
+
+        VBox vBox = new VBox(btn);
+
+        vBox.setLayoutX(460);
+        vBox.setLayoutY(440);
+
+        Group root = new Group(vBox);
+
+        Scene scene = new Scene(root, 640, 480);
+
+        Button btn2 = new Button("DRAW");
+
+        btn2.setOnAction(event->{
+            if(dffx != null){
+                Scene s = new Scene(drawDF("last", "y"),540,400);
+                stage.setScene(s);
+            }else
+                System.out.println("cant do that");
+        });
+
+        VBox vBox2 = new VBox(btn2);
+
+        vBox2.setLayoutX(100);
+        vBox2.setLayoutY(440);
+
+        root.getChildren().add(vBox2);
+
+        stage.setScene(scene);
+        stage.show();
+    }
+    */
     public static void main(String[] args) throws Exception {
         // System.out.println("Henlo Java");
 
@@ -164,25 +239,33 @@ public class App{
         // System.out.println(dtv1+" / 2  = "+(dtv1.div(IValue.builder().setValue("2").build())));
         
         
-        // System.out.println("\n\n--- Group by! ---");
-        // DataFrame dfgr = new  DataFrame( 
-        //     "data/groupby.csv",
-        //     // "data/groupby.csv",
-        //     new String[]{"string","date","double","double"},
-        //     null
-        // );
-        // dfgr.print();
-        // dfgr.groupby(new String[]{"id","date"}).sum().print();
-        // dfgr.groupby(new String[]{"id","date"}).mean().print();
-        // dfgr.groupby(new String[]{"id","date"}).var().print();
-        // dfgr.groupby(new String[]{"id","date"}).std().print();
-        // dfgr.groupby(new String[]{"id","date"}).min().print();
-        // dfgr.groupby(new String[]{"id","date"}).max().print();
-        // dfgr.groupby(new String[]{"id","date"}).apply(new Mediana()).print();
+        System.out.println("\n\n--- Group by! ---");
+        DataFrame dfgr = new  DataFrame( 
+            "data/groupby.csv",
+            // "data/groupby.csv",
+            new String[]{"string","date","double","double"},
+            null
+        );
+        dfgr.print();
+        dfgr.groupby(new String[]{"id","date"}).sum().print();
+        dfgr.groupby(new String[]{"id","date"}).mean().print();
+        dfgr.groupby(new String[]{"id","date"}).var().print();
+        dfgr.groupby(new String[]{"id","date"}).std().print();
+        dfgr.groupby(new String[]{"id","date"}).min().print();
+        dfgr.groupby(new String[]{"id","date"}).max().print();
+        dfgr.groupby(new String[]{"id","date"}).apply(new Mediana()).print();
 
 
-        //needs uncommenting a lot of stuff!
-        // System.out.println("\n\n--- GUI! ---");
+        // //needs uncommenting of:
+        // imports
+        // launch
+        // start
+        // Class App extends...
+        // launch()
+
+        // mv $JAVA_HOME/lib/jrt-fs.jar $JAVA_HOME/lib
+        // change debug configuration to JavaFX
+
         // launch();
     }
 }

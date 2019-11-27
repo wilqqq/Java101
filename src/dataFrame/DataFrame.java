@@ -7,6 +7,7 @@ import sValue.SValue;
 import value.Value;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +46,10 @@ public class DataFrame {
             add(elements);
     }
 
+    // //TODO lazy implementation
+    // public DataFrame(File file, String[] columnTypes, String[] columnNames){
+    //     this(file.getName(), String[] columnTypes, String[] columnNames);
+    // }
     public DataFrame(String fileName, String[] columnTypes, String[] columnNames) {
         try (FileReader fr = new FileReader(fileName)) {
             BufferedReader br = new BufferedReader(fr);
