@@ -28,7 +28,6 @@ import data.Data;
 // import javafx.stage.FileChooser;
 // import javafx.stage.Stage;
 
-// import mariadb;
 import java.sql.*;
 
 
@@ -239,21 +238,21 @@ public class App{
         // System.out.println(dtv1+" / 2  = "+(dtv1.div(IValue.builder().setValue("2").build())));
         
         
-        System.out.println("\n\n--- Group by! ---");
-        DataFrame dfgr = new  DataFrame( 
-            "data/groupby.csv",
-            // "data/groupby.csv",
-            new String[]{"string","date","double","double"},
-            null
-        );
-        dfgr.print();
-        dfgr.groupby(new String[]{"id","date"}).sum().print();
-        dfgr.groupby(new String[]{"id","date"}).mean().print();
-        dfgr.groupby(new String[]{"id","date"}).var().print();
-        dfgr.groupby(new String[]{"id","date"}).std().print();
-        dfgr.groupby(new String[]{"id","date"}).min().print();
-        dfgr.groupby(new String[]{"id","date"}).max().print();
-        dfgr.groupby(new String[]{"id","date"}).apply(new Mediana()).print();
+        // System.out.println("\n\n--- Group by! ---");
+        // DataFrame dfgr = new  DataFrame( 
+        //     "data/groupby.csv",
+        //     // "data/groupby.csv",
+        //     new String[]{"string","date","double","double"},
+        //     null
+        // );
+        // dfgr.print();
+        // dfgr.groupby(new String[]{"id","date"}).sum().print();
+        // dfgr.groupby(new String[]{"id","date"}).mean().print();
+        // dfgr.groupby(new String[]{"id","date"}).var().print();
+        // dfgr.groupby(new String[]{"id","date"}).std().print();
+        // dfgr.groupby(new String[]{"id","date"}).min().print();
+        // dfgr.groupby(new String[]{"id","date"}).max().print();
+        // dfgr.groupby(new String[]{"id","date"}).apply(new Mediana()).print();
 
 
         // //needs uncommenting of:
@@ -262,10 +261,26 @@ public class App{
         // start
         // Class App extends...
         // launch()
-
         // mv $JAVA_HOME/lib/jrt-fs.jar $JAVA_HOME/lib
         // change debug configuration to JavaFX
+        
+        System.out.println("\n\n--- MariaDB and MySQL! ---");
+        System.out.println("Remember to enable database: sudo systemctl start mariadb.service");
+        System.out.println("init");
+        try {
+            try{
+                Connection con = DriverManager.getConnection(
+                "jdbc:mariadb://localhost/dfdb", "javadf", "javadf");//}= DriverManager.getConnection("jdbc:mariadb://localhost:3306/testj?user=diego2&password=diego")){
+                System.out.println("connected");
+            }catch(Exception e){
+                e.printStackTrace();
+            } finally {
+                System.out.println("done");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+ 
 
-        // launch();
     }
 }

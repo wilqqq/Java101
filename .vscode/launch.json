@@ -12,7 +12,8 @@
             "type": "java",
             "name": "CodeLens (Launch) - App",
             "request": "launch",
-            //"vmArgs": "--module-path /usr/lib/jvm/jdk-13/lib --add-modules javafx.controls,javafx.fxml",
+            // "args": "-cp ./mariadb-java-client-1.1.10.jar:.",
+            // "vmArgs":"--module-path /usr/lib/jvm/jdk-13/lib --add-modules mariadb-java-client-1.1.10",
             "mainClass": "app.App",
             "projectName": "Lab1"
         }
