@@ -5,7 +5,7 @@
 	<classpathentry kind="lib" path="/usr/lib/jvm/jdk-13/lib/javafx.controls.jar"/>
 	<classpathentry kind="lib" path="/usr/lib/jvm/jdk-13/lib/javafx.fxml.jar"/>
 	<classpathentry kind="lib" path="/usr/lib/jvm/jdk-13/lib/mariadb-java-client-1.1.10.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-13"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
