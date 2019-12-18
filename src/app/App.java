@@ -1,20 +1,6 @@
 
 package app;
 
-import dataFrame.DataFrame;
-import dataFrame.*;
-import dtValue.DTValue;
-import iValue.IValue;
-import sValue.SValue;
-import sparseDataFrame.SparseDataFrame;
-import value.Value;
-
-import java.io.File;
-import java.time.LocalDate;
-
-import dValue.DValue;
-import data.Data;
-
 // import javafx.application.Application;
 // import javafx.scene.Group;
 // import javafx.scene.Scene;
@@ -28,8 +14,11 @@ import data.Data;
 // import javafx.stage.FileChooser;
 // import javafx.stage.Stage;
 
-import java.sql.*;
 
+import dataFrame.DFDB;
+import dfExceptions.UnknownTypeException;
+
+import java.sql.SQLException;
 
 public class App{
 //public class App extends Application{
@@ -207,35 +196,35 @@ public class App{
         // DataFrame hlpr = sdf2.toDense(5,10,new String[]{"last","x","y","a","b","c"});
         // hlpr.print();
 
-        // System.out.println("\n\n--- Value class and its inheritances! ---");
-        // DValue dv = DValue.builder().setValue("12.34").build();
-        // Value dv0 = dv.create("0.0");
-        // DValue dv2 = (DValue)dv.clone();
-        // System.out.println(dv+"+"+dv2+"="+(dv.add(dv2)));
-        // System.out.println(dv+"*"+dv2+"="+(dv.mul(dv2)));
-        // System.out.println(dv+"-"+dv2+"="+(dv.sub(dv2)));
-        // System.out.println(dv+"/"+dv2+"="+(dv.div(dv2)));
-        // try {
-        //     dv.div(dv0);
-        // } catch (Exception e) {
-        //     System.out.println(dv+"/"+dv0+"=Exception: "+e.getMessage());
-        // }
-        // SValue sv1 = SValue.builder().setValue("valuevalue").build();
-        // Value sv2 = sv1.create("vvalu");
-        // System.out.println(sv1+" rotfl with "+sv2+" = "+(sv1.mul(sv2))+"["+sv1.getValue().length()+"] then derotf: "+sv1.div(sv2)+"["+sv1.getValue().length()+"]");
-        // DTValue dtv1 = DTValue.builder()
-        // .setSeconds("00")
-        // .setMinutes("44")
-        // .setHour("12")
-        // .setDay("03")
-        // .setMonth("06")
-        // .setYear("1996")
-        // .build();
-        // Value dtv2 = dtv1.create("1996-06-03 15:44:22");
-        // System.out.println(dtv1+" >= "+dtv2+" = "+(dtv1.gte(dtv2)));
-        // System.out.println(dtv1+" <= "+dtv2+" = "+(dtv1.lte(dtv2)));
-        // System.out.println(dtv1+" + "+dtv2+" = "+(dtv1.add(dtv2).sub(DTValue.EPOCH_DT_VALUE))); //FOR MEAN USE SUM OF DIFFERENCEs BETWEEN DATES AND EPOCH
-        // System.out.println(dtv1+" / 2  = "+(dtv1.div(IValue.builder().setValue("2").build())));
+//         System.out.println("\n\n--- Value class and its inheritances! ---");
+//         DValue dv = DValue.builder().setValue("12.34").build();
+//         Value dv0 = dv.create("0.0");
+//         DValue dv2 = (DValue)dv.clone();
+//         System.out.println(dv+"+"+dv2+"="+(dv.add(dv2)));
+//         System.out.println(dv+"*"+dv2+"="+(dv.mul(dv2)));
+//         System.out.println(dv+"-"+dv2+"="+(dv.sub(dv2)));
+//         System.out.println(dv+"/"+dv2+"="+(dv.div(dv2)));
+//         try {
+//             dv.div(dv0);
+//         } catch (Exception e) {
+//             System.out.println(dv+"/"+dv0+"=Exception: "+e.getMessage());
+//         }
+//         SValue sv1 = SValue.builder().setValue("valuevalue").build();
+//         Value sv2 = sv1.create("vvalu");
+//         System.out.println(sv1+" rotfl with "+sv2+" = "+(sv1.mul(sv2))+"["+sv1.getValue().length()+"] then derotf: "+sv1.div(sv2)+"["+sv1.getValue().length()+"]");
+//         DTValue dtv1 = DTValue.builder()
+//         .setSeconds("00")
+//         .setMinutes("44")
+//         .setHour("12")
+//         .setDay("03")
+//         .setMonth("06")
+//         .setYear("1996")
+//         .build();
+//         Value dtv2 = dtv1.create("1996-06-03 15:44:22");
+//         System.out.println(dtv1+" >= "+dtv2+" = "+(dtv1.gte(dtv2)));
+//         System.out.println(dtv1+" <= "+dtv2+" = "+(dtv1.lte(dtv2)));
+//         System.out.println(dtv1+" + "+dtv2+" = "+(dtv1.add(dtv2).sub(DTValue.EPOCH_DT_VALUE))); //FOR MEAN USE SUM OF DIFFERENCEs BETWEEN DATES AND EPOCH
+//         System.out.println(dtv1+" / 2  = "+(dtv1.div(IValue.builder().setValue("2").build())));
         
         
         // System.out.println("\n\n--- Group by! ---");
@@ -268,19 +257,30 @@ public class App{
         System.out.println("Remember to enable database: sudo systemctl start mariadb.service");
         System.out.println("init");
         try {
-            try{
-                Connection con = DriverManager.getConnection(
-                "jdbc:mariadb://localhost/dfdb", "javadf", "javadf");//}= DriverManager.getConnection("jdbc:mariadb://localhost:3306/testj?user=diego2&password=diego")){
-                System.out.println("connected");
-            }catch(Exception e){
-                e.printStackTrace();
-            } finally {
-                System.out.println("done");
-            }
-        } catch (Exception e){
+            DFDB dfdb = new DFDB("javadf");
+            System.out.println(dfdb.ask("SHOW DATABASES;")+"\n----\n");
+            System.out.println(dfdb.ask("SHOW TABLES;")+"\n----\n");
+//            System.out.println(dfdb.ask("LOAD DATA LOCAL INFILE '/home/wilqqq/Documents/Java/data/mingroupby.csv' INTO TABLE mingroupby CHARACTER SET UTF8 FIELDS TERMINATED BY',' OPTIONALLY ENCLOSED BY\"\" LINES TERMINATED BY '\\n';"));
+//            dfdb.loadLocalFile("/home/wilqqq/Documents/Java/data/mingroupby.csv",
+//                    "mingroupby",
+//                    new String[]{"id","date","total","val"},
+//                    new String[]{"char(1)","date not null","double(18,17)","double(18,10)"}
+//            );
+//            dfdb.get(
+//                    "mingroupby",
+//                    new String[]{"id","date","total","val"},
+//                    new String[]{"string","date","double","double"},
+//                    5,
+//                    2
+//            ).print();
+            dfdb.min(
+                    "mingroupby",
+                    new String[]{"id","total","val"},
+                    new String[]{"id"},
+                    new String[]{"string","double","double"}
+            ).print();
+        } catch (SQLException | UnknownTypeException e){
             e.printStackTrace();
         }
- 
-
     }
 }

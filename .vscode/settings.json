@@ -1,10 +1,8 @@
 {
     "files.exclude": {
-        "**/.classpath": false,
-        "**/.project": false,
-        "**/.settings": false,
-        "**/.factorypath": false
-    },
-    "java.dependency.packagePresentation": "hierarchical",
-    "java.dependency.syncWithFolderExplorer": false
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    }
 }

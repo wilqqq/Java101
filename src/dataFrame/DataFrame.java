@@ -1,24 +1,18 @@
 package dataFrame;
 
-import data.*;
+import dValue.DValue;
+import data.Data;
+import dfExceptions.UnknownTypeException;
 import dtValue.DTValue;
 import iValue.IValue;
 import sValue.SValue;
 import value.Value;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import dValue.DValue;
 
 /**
  * DataFrame - a class for holding vectors of values with different data types
@@ -84,13 +78,14 @@ public class DataFrame {
                         el = DTValue.builder().setValue(s).build();
                         break;
                     default:
-                        throw new Error("unknown data type: " + columnTypes[i].toLowerCase());
+//                        throw new Error("unknown data type: " + columnTypes[i].toLowerCase());
+                        throw new UnknownTypeException(97,columnTypes[i],columnNames[i]);
                     }
                     this.data[i++].add(el);
                 }
             }
             // automatic closed with try-with-resources
-        } catch (IOException e) {
+        } catch (IOException | UnknownTypeException e) {
             e.printStackTrace();
         }
     }

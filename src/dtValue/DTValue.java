@@ -1,11 +1,11 @@
 package dtValue;
 
+import iValue.IValue;
+import value.Value;
+
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import dValue.DValue;
-import iValue.IValue;
-import value.*;
 
 /**
  * DTValue
@@ -123,6 +123,11 @@ public class DTValue extends Value {
     private DTValue(LocalDate ld, LocalTime lt){
         date = ld.plusYears(0);
         time = lt.plusHours(0);
+    }
+
+    public DTValue(Date date){
+        this.date = date.toLocalDate();
+        this.time = LocalTime.MIN;
     }
 
     private DTValue(String obj) {
